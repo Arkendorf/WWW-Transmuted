@@ -1,3 +1,5 @@
+local deckmanager = require "deckmanager"
+
 local handmanager = {}
 
 -- The current hand of cards
@@ -13,8 +15,10 @@ local time_to_grab = .1
 
 -- The graphical representations of the cards in the hand
 handmanager.hand_graphics = {}
-handmanager.card_w = 100
-handmanager.card_h = 160
+
+handmanager.load = function()
+  handmanager.fill_hand(deckmanager.deck)
+end
 
 handmanager.update = function(dt)
   -- Check if the player is grabbing a card
@@ -38,7 +42,7 @@ handmanager.update = function(dt)
   for i, graphic in ipairs(handmanager.hand_graphics) do
     -- Check to see if the card is hovered over
     local mx, my = love.mouse.getPosition()
-    if mx > graphic.x and mx < graphic.x + handmanager.card_w and my > graphic.y and my < graphic.y + handmanager.card_h then
+    if mx > graphic.x and mx < graphic.x + deckmanager.card_w and my > graphic.y and my < graphic.y + deckmanager.card_h then
       -- mark this card as hovered over
       handmanager.hover = i
     end
@@ -48,11 +52,11 @@ handmanager.update = function(dt)
     local goal_y
     -- If the card is grabbed, move it to the mouse
     if handmanager.grabbed == i then
-      goal_x = mx - handmanager.card_w / 2
-      goal_y = my - handmanager.card_h / 2
+      goal_x = mx - deckmanager.card_w / 2
+      goal_y = my - deckmanager.card_h / 2
     else -- Otherwise, put it at the right position on the bottom of the screen
-      goal_x = (love.graphics:getWidth() - handmanager.hand_size * handmanager.card_w) / 2 + (i-1) * handmanager.card_w
-      goal_y = love.graphics:getHeight() - handmanager.card_h
+      goal_x = (love.graphics:getWidth() - handmanager.hand_size * deckmanager.card_w) / 2 + (i-1) * deckmanager.card_w
+      goal_y = love.graphics:getHeight() - deckmanager.card_h
       -- Move the card up a bit if it is selected or hovered over
       if handmanager.selected == i then
         goal_y = goal_y - 60
@@ -68,7 +72,7 @@ end
 
 handmanager.draw = function(dt)
   for i, graphic in ipairs(handmanager.hand_graphics) do
-    love.graphics.rectangle("line", graphic.x, graphic.y, handmanager.card_w, handmanager.card_h)
+    love.graphics.rectangle("line", graphic.x, graphic.y, deckmanager.card_w, deckmanager.card_h)
     love.graphics.print(graphic.card.name, graphic.x, graphic.y)
   end
 end
@@ -106,7 +110,7 @@ handmanager.fill_hand = function(deck)
       handmanager.hand[i] = deck[card]
       table.remove(deck, card)
 
-      table.insert(handmanager.hand_graphics, {card = handmanager.hand[i], x = 600, y = 400})
+      table.insert(handmanager.hand_graphics, {card = handmanager.hand[i], x = deckmanager.x, y = deckmanager.y})
     end
   end
 end
