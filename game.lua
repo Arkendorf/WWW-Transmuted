@@ -2,7 +2,7 @@ local gui = require "gui"
 local cards = require "cards"
 local handmanager = require "handmanager"
 local deckmanager = require "deckmanager"
-local boardmanager = require "deckmanager"
+local boardmanager = require "boardmanager"
 
 local game = {}
 
@@ -26,17 +26,11 @@ game.draw = function()
   boardmanager.draw()
   deckmanager.draw()
   handmanager.draw()
-  -- for i, card in ipairs(handmanager.hand) do
-  --   if handmanager.selected == i then
-  --     love.graphics.print(card.name, 20, i*12)
-  --   else
-  --     love.graphics.print(card.name, 0, i*12)
-  --   end
-  -- end
 end
 
 game.mousepressed = function(x, y, button)
   if state == "select" then
+    boardmanager.mousepressed(x, y, button)
     handmanager.mousepressed(x, y, button)
   end
 end

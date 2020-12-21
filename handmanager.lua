@@ -55,7 +55,7 @@ handmanager.update = function(dt)
       goal_x = mx - deckmanager.card_w / 2
       goal_y = my - deckmanager.card_h / 2
     else -- Otherwise, put it at the right position on the bottom of the screen
-      goal_x = (love.graphics:getWidth() - handmanager.hand_size * deckmanager.card_w) / 2 + (i-1) * deckmanager.card_w
+      goal_x = (love.graphics:getWidth() - #handmanager.hand * deckmanager.card_w) / 2 + (i-1) * deckmanager.card_w
       goal_y = love.graphics:getHeight() - deckmanager.card_h
       -- Move the card up a bit if it is selected or hovered over
       if handmanager.selected == i then
@@ -85,10 +85,12 @@ handmanager.mousepressed = function(x, y, button)
       handmanager.selected = handmanager.hover
       -- Reset hold time
       hold_time = 0
+      return true -- mar that the click has been used
     else -- Otherwise, mark no card as selected
       handmanager.selected = false
     end
   end
+  return false
 end
 
 -- Called when a key is pressed
@@ -115,5 +117,12 @@ handmanager.fill_hand = function(deck)
   end
 end
 
+handmanager.card_placed = function()
+  table.remove(handmanager.hand, handmanager.selected)
+  table.remove(handmanager.hand_graphics, handmanager.selected)
+  handmanager.grabbed = false
+  handmanager.selected = false
+  handmanager.fill_hand(deckmanager.deck)
+end
 
 return handmanager

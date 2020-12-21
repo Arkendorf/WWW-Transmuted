@@ -3,7 +3,7 @@ local cards = require "cards"
 local deckmanager = {}
 
 deckmanager.deck = {}
-deckmanager.deck_size = 20
+deckmanager.deck_size = 10
 
 deckmanager.card_w = 100
 deckmanager.card_h = 160
