@@ -3,6 +3,7 @@ preserver = require "preserver"
 preclient = require "preclient"
 server = require "server"
 client = require "client"
+game = require "game"
 
 local gui = require "gui"
 

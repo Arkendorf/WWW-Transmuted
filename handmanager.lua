@@ -79,26 +79,30 @@ end
 
 -- Called when the mouse is pressed
 handmanager.mousepressed = function(x, y, button)
-  if button == 1 then
-    -- If card is hovered over, and mouse is pressed, mark that card as selected
-    if handmanager.hover then
-      handmanager.selected = handmanager.hover
-      -- Reset hold time
-      hold_time = 0
-      return true -- mar that the click has been used
-    else -- Otherwise, mark no card as selected
-      handmanager.selected = false
+  if game.state == "place" then
+    if button == 1 then
+      -- If card is hovered over, and mouse is pressed, mark that card as selected
+      if handmanager.hover then
+        handmanager.selected = handmanager.hover
+        -- Reset hold time
+        hold_time = 0
+        return true -- mar that the click has been used
+      else -- Otherwise, mark no card as selected
+        handmanager.selected = false
+      end
     end
+    return false
   end
-  return false
 end
 
 -- Called when a key is pressed
 handmanager.keypressed = function(key)
-  -- Convert numerical key to a selected card
-  local i = tonumber(key)
-  if i > 0 and i <= handmanager.hand_size then
-    handmanager.selected = i
+  if game.state == "place" then
+    -- Convert numerical key to a selected card
+    local i = tonumber(key)
+    if i > 0 and i <= handmanager.hand_size then
+      handmanager.selected = i
+    end
   end
 end
 

@@ -65,35 +65,54 @@ boardmanager.update = function(dt)
         end
       end
     end
+
+    -- If both the player and the opponent have placed their cards, move on to the next part of the game
+    if game.opponent_placed and game.opponent_turn.card then
+      -- Place the opponent's card visually on the board
+      boardmanager.place_card(boardmanager.opponent_board, game.opponent_turn.card, game.opponent_turn.lane)
+      -- Reset opponent card after it has been added
+      game.opponent_turn.card = false
+      -- Move on to the next game state
+      game.state = "simulate"
+    end
   end
 
+  -- If the player has grabbed a card, and dropped it, try to place it
   if handmanager.grabbed and not love.mouse.isDown(1) then
-    boardmanager.place_card()
+    boardmanager.place_player_card()
   end
 end
 
 boardmanager.mousepressed = function(x, y, button)
-  if button == 1 then
-    boardmanager.place_card()
+  if game.state == "place" then
+    if button == 1 then
+      boardmanager.place_player_card()
+    end
   end
 end
 
-boardmanager.place_card = function()
+-- Places the card the player is currently holding in the selected lane
+boardmanager.place_player_card = function()
   -- Make sure that a valid place is selected
   if boardmanager.hover then
     -- Get the selected card
     local selected_card = handmanager.hand[handmanager.selected]
     -- Put the card into the place
-    boardmanager.player_board[selected_card.type][boardmanager.hover] = selected_card
-    -- Tell the hand manager that the card was placed
+    boardmanager.place_card(boardmanager.player_board, selected_card, boardmanager.hover)
+    -- Tell the hand manager that the selected card was placed
     handmanager.card_placed()
-    -- Let whoever's handling the network know
-    boardmanager.network_card_placed()
+    -- Let whoever's handling the network know that the player has placed their card
+    boardmanager.network_card_placed(selected_card, boardmanager.hover, selected_card.type)
   end
 end
 
+-- Puts the given card on the given board on the given lane
+boardmanager.place_card = function(board, card, lane)
+  board[card.type][lane] = card
+end
+
 -- This function will be overridden by either the client or server
-boardmanager.network_card_placed = function()
+boardmanager.network_card_placed = function(card, lane, type)
 end
 
 boardmanager.draw = function()

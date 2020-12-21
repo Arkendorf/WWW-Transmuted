@@ -1,17 +1,21 @@
 local network = require "network"
-local game = require "game"
 
 local server = {}
 
-local opponent
+local opponent = false
 
 server.load = function(peer)
   math.randomseed(os.time()+1)
   opponent = peer
+
   game.load()
+  game.queue = function(event, data)
+    network.server.queue(event, data, opponent)
+  end
 end
 
 server.update = function(dt)
+  network.server.update(dt)
   game.update(dt)
 end
 

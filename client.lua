@@ -1,14 +1,17 @@
 local network = require "network"
-local game = require "game"
-
 local client = {}
 
 client.load = function()
   math.randomseed(os.time())
+
   game.load()
+  game.queue = function(event, data)
+    network.client.queue(event, data)
+  end
 end
 
 client.update = function(dt)
+  network.client.update(dt)
   game.update(dt)
 end
 
