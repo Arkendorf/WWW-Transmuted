@@ -3,6 +3,8 @@ local cards = require "cards"
 local handmanager = require "handmanager"
 local deckmanager = require "deckmanager"
 local boardmanager = require "boardmanager"
+local attackmanager = require "attackmanager"
+
 local network = require "network"
 
 local game = {}
@@ -20,6 +22,7 @@ game.load = function()
   boardmanager.load()
   deckmanager.load()
   handmanager.load()
+  attackmanager.load()
 
   -- Saved data on player and opponent cards placed this turn
   game.player_placed = false
@@ -62,12 +65,14 @@ game.update = function(dt)
   boardmanager.update(dt)
   deckmanager.update(dt)
   handmanager.update(dt)
+  attackmanager.update(dt)
 end
 
 game.draw = function()
   boardmanager.draw()
   deckmanager.draw()
   handmanager.draw()
+  attackmanager.draw()
 end
 
 game.mousepressed = function(x, y, button)

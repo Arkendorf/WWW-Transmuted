@@ -1,4 +1,5 @@
 local handmanager = require "handmanager"
+local attackmanager = require "attackmanager"
 
 boardmanager = {}
 
@@ -57,7 +58,7 @@ boardmanager.update = function(dt)
     -- If the row matches the type of the currently selected card then allow hovering
     if handmanager.selected and handmanager.hand[handmanager.selected].type == type then
       -- Iterate through each space in the row
-      for lane, card in ipairs(row) do
+      for lane, token in ipairs(row) do
         -- Get the space's position
         local x, y = boardmanager.get_space_coords(lane, type, boardmanager.player_graphics)
         if mx > x and mx < x + boardmanager.token_w and my > y and my < y + boardmanager.token_h then
@@ -71,15 +72,49 @@ boardmanager.update = function(dt)
       -- Place the opponent's card visually on the board
       boardmanager.place_card(boardmanager.opponent_board, game.opponent_turn.card, game.opponent_turn.lane)
       -- Reset opponent card after it has been added
+      game.opponent_placed = false
       game.opponent_turn.card = false
+      -- Reset player card after it has been added
+      game.placed_placed = false
+      game.player_turn.card = false
       -- Move on to the next game state
       game.state = "simulate"
+      -- Generate attacks
+      boardmanager.generate_attacks(boardmanager.player_board, boardmanager.opponent_board, boardmanager.player_graphics, boardmanager.opponent_graphics)
+      boardmanager.generate_attacks(boardmanager.opponent_board, boardmanager.player_board, boardmanager.opponent_graphics, boardmanager.player_graphics)
+    end
+
+    if game.state == "simulate" and #attackmanager.attacks <= 0 then
+      game.state = "place"
     end
   end
 
   -- If the player has grabbed a card, and dropped it, try to place it
   if handmanager.grabbed and not love.mouse.isDown(1) then
     boardmanager.place_player_card()
+  end
+end
+
+boardmanager.generate_attacks = function(player_board, opponent_board, player_graphics, opponent_graphics)
+  -- Iterate through the spellcasting lanes
+  for lane, token in ipairs(player_board.spells) do
+    -- Check if the spot is occupied
+    if token then
+      -- Determine the attack's target. The opponent, the shield, or the spell
+      local target = false -- default should be enemy player
+      local goal_y = 0
+      if opponent_board.shields[lane] then
+        target = opponent_board.shields[lane]
+        _, goal_y = boardmanager.get_space_coords(lane, "shields", opponent_graphics)
+      elseif opponent_board.spells[lane] then
+        target = opponent_board.spells[lane]
+        _, goal_y = boardmanager.get_space_coords(lane, "spells", opponent_graphics)
+      end
+      -- Get the spell's position
+      local x, y = boardmanager.get_space_coords(lane, "spells", player_graphics)
+      -- Create the attack
+      attackmanager.add_attack(token, target, x + boardmanager.token_w / 2, y + boardmanager.token_h / 2, goal_y + boardmanager.token_h / 2)
+    end
   end
 end
 
@@ -108,7 +143,7 @@ end
 
 -- Puts the given card on the given board on the given lane
 boardmanager.place_card = function(board, card, lane)
-  board[card.type][lane] = card
+  board[card.type][lane] = {value = card.value, card = card}
 end
 
 -- This function will be overridden by either the client or server
@@ -123,14 +158,14 @@ end
 -- Draw a board
 boardmanager.draw_board = function(board, graphics_data, editable)
   for type, row in pairs(board) do
-    for lane, card in ipairs(row) do
-      boardmanager.draw_space(card, lane, type, graphics_data, editable)
+    for lane, token in ipairs(row) do
+      boardmanager.draw_space(token, lane, type, graphics_data, editable)
     end
   end
 end
 
 -- Draw a single space on a board
-boardmanager.draw_space = function(card, lane, type, graphics_data, editable)
+boardmanager.draw_space = function(token, lane, type, graphics_data, editable)
   -- Convert data to the position of the space
   local x, y = boardmanager.get_space_coords(lane, type, graphics_data)
   -- Draw the space's outline
@@ -141,8 +176,8 @@ boardmanager.draw_space = function(card, lane, type, graphics_data, editable)
     love.graphics.rectangle("line", x, y, boardmanager.token_h, boardmanager.token_w)
   end
   -- Draw the card token in the space
-  if card then
-    boardmanager.draw_token(card, x, y)
+  if token then
+    boardmanager.draw_token(token, x, y)
   end
 end
 
@@ -157,9 +192,9 @@ boardmanager.get_space_coords = function(lane, type, graphics_data)
 end
 
 -- Draws a token based on the given card
-boardmanager.draw_token = function(card, x, y)
+boardmanager.draw_token = function(token, x, y)
   love.graphics.rectangle("line", x, y, boardmanager.token_h, boardmanager.token_w)
-  love.graphics.print(card.value, x, y)
+  love.graphics.print(token.value, x, y)
 end
 
 return boardmanager
