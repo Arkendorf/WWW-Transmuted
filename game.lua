@@ -12,6 +12,7 @@ local game = {}
 
 -- The current game state
 game.state = "place"
+game.over_message = ""
 
 game.player_turn = {}
 game.opponent_turn = {}
@@ -77,6 +78,10 @@ game.draw = function()
   handmanager.draw()
   attackmanager.draw()
   charmanager.draw()
+  
+  if game.mode == "over" then
+    love.graphics.print(game.over_message)
+  end
 end
 
 game.mousepressed = function(x, y, button)
@@ -90,6 +95,30 @@ end
 
 -- Should be overridden depending on whether this user is a server or client
 game.queue = function(event, data)
+end
+
+game.win = function()
+  game.over_message = "Victory"
+  game.over()
+end
+
+game.lose = function()
+  game.over_message = "Defeat"
+  game.over()
+end
+
+game.tie = function()
+  game.over_message = "Mutual Destruction"
+  game.over()
+end
+
+game.over = function()
+  game.mode = "over"
+  gui.new_button("leave", 0, 20, 200, 50, "Leave", game.leave)
+end
+
+-- Should be overridden
+game.leave = function()
 end
 
 return game

@@ -3,7 +3,7 @@ local attackmanager = {}
 -- List of attack projectiles
 attackmanager.attacks = {}
 -- Attack projectile speed
-attackmanager.attack_speed = 240;
+attackmanager.attack_speed = 500;
 
 attackmanager.load = function()
   attackmanager.attacks = {}

@@ -1,4 +1,5 @@
 local network = require "network"
+local gui = require "gui"
 
 local server = {}
 
@@ -9,8 +10,16 @@ server.load = function(peer)
   opponent = peer
 
   game.load()
+
   game.queue = function(event, data)
     network.server.queue(event, data, opponent)
+  end
+
+  game.leave = function()
+    network.server.quit()
+    gui.remove_all()
+    mode = "mainmenu"
+    mainmenu.load()
   end
 end
 

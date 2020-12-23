@@ -1,12 +1,22 @@
 local network = require "network"
+local gui = require "gui"
+
 local client = {}
 
 client.load = function()
   math.randomseed(os.time())
 
   game.load()
+
   game.queue = function(event, data)
     network.client.queue(event, data)
+  end
+
+  game.leave = function()
+    network.client.quit()
+    gui.remove_all()
+    mode = "mainmenu"
+    mainmenu.load()
   end
 end
 
