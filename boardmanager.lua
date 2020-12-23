@@ -1,5 +1,6 @@
 local handmanager = require "handmanager"
 local attackmanager = require "attackmanager"
+local charmanager = require "charmanager"
 
 boardmanager = {}
 
@@ -24,16 +25,16 @@ boardmanager.token_h = 100
 
 -- Graphics info for player's board
 boardmanager.player_graphics = {
-  x = (love.graphics.getWidth() - boardmanager.token_w * boardmanager.lane_num) / 2,
-  y = love.graphics.getHeight() / 2,
-  top = "shields"
+  x = love.graphics.getWidth() / 2 - boardmanager.token_h * 2,
+  y = (love.graphics.getHeight() - boardmanager.token_w * boardmanager.lane_num) / 2,
+  top = "spells"
 }
 
 -- Graphics info for opponent's board
 boardmanager.opponent_graphics = {
-  x = boardmanager.player_graphics.x,
-  y = love.graphics.getHeight() / 2 - boardmanager.token_h * 2,
-  top = "spells"
+  x = love.graphics.getWidth() / 2,
+  y = boardmanager.player_graphics.y,
+  top = "shields"
 }
 
 boardmanager.hover = false
@@ -49,6 +50,9 @@ boardmanager.load = function()
 end
 
 boardmanager.update = function(dt)
+  boardmanager.check_death(boardmanager.player_board)
+  boardmanager.check_death(boardmanager.opponent_board)
+
   -- Reset the hover
   boardmanager.hover = false
   -- Get the mouse position
@@ -66,54 +70,68 @@ boardmanager.update = function(dt)
         end
       end
     end
-
-    -- If both the player and the opponent have placed their cards, move on to the next part of the game
-    if game.opponent_placed and game.opponent_turn.card then
-      -- Place the opponent's card visually on the board
-      boardmanager.place_card(boardmanager.opponent_board, game.opponent_turn.card, game.opponent_turn.lane)
-      -- Reset opponent card after it has been added
-      game.opponent_placed = false
-      game.opponent_turn.card = false
-      -- Reset player card after it has been added
-      game.placed_placed = false
-      game.player_turn.card = false
-      -- Move on to the next game state
-      game.state = "simulate"
-      -- Generate attacks
-      boardmanager.generate_attacks(boardmanager.player_board, boardmanager.opponent_board, boardmanager.player_graphics, boardmanager.opponent_graphics)
-      boardmanager.generate_attacks(boardmanager.opponent_board, boardmanager.player_board, boardmanager.opponent_graphics, boardmanager.player_graphics)
-    end
-
-    if game.state == "simulate" and #attackmanager.attacks <= 0 then
-      game.state = "place"
-    end
   end
 
   -- If the player has grabbed a card, and dropped it, try to place it
   if handmanager.grabbed and not love.mouse.isDown(1) then
     boardmanager.place_player_card()
   end
+
+  -- If both the player and the opponent have placed their cards, move on to the next part of the game
+  if game.opponent_placed and game.opponent_turn.card then
+    -- Place the opponent's card visually on the board
+    boardmanager.place_card(boardmanager.opponent_board, game.opponent_turn.card, game.opponent_turn.lane)
+    -- Reset opponent card after it has been added
+    game.opponent_placed = false
+    game.opponent_turn.card = false
+    -- Reset player card after it has been added
+    game.placed_placed = false
+    game.player_turn.card = false
+    -- Move on to the next game state
+    game.state = "simulate"
+    -- Generate attacks
+    boardmanager.generate_attacks(boardmanager.player_board, boardmanager.opponent_board, boardmanager.player_graphics, boardmanager.opponent_graphics, charmanager.opponent)
+    boardmanager.generate_attacks(boardmanager.opponent_board, boardmanager.player_board, boardmanager.opponent_graphics, boardmanager.player_graphics, charmanager.player)
+  end
+
+  if game.state == "simulate" and #attackmanager.attacks <= 0 then
+    game.state = "place"
+  end
 end
 
-boardmanager.generate_attacks = function(player_board, opponent_board, player_graphics, opponent_graphics)
+-- Checks if tokens have died
+boardmanager.check_death = function(board)
+  -- Iterate through the rows of the board
+  for type, row in pairs(board) do
+    -- Iterate through the lanes on that row
+    for lane, token in ipairs(row) do
+      -- If the token exists and it's value is less than or equal to zero, remove it
+      if token and token.value <= 0 then
+        board[type][lane] = false
+      end
+    end
+  end
+end
+
+boardmanager.generate_attacks = function(player_board, opponent_board, player_graphics, opponent_graphics, opponent_char)
   -- Iterate through the spellcasting lanes
   for lane, token in ipairs(player_board.spells) do
     -- Check if the spot is occupied
     if token then
       -- Determine the attack's target. The opponent, the shield, or the spell
-      local target = false -- default should be enemy player
-      local goal_y = 0
+      local target = opponent_char -- default should be enemy player
+      local goal_x = opponent_char.x
       if opponent_board.shields[lane] then
         target = opponent_board.shields[lane]
-        _, goal_y = boardmanager.get_space_coords(lane, "shields", opponent_graphics)
+        goal_x = boardmanager.get_space_coords(lane, "shields", opponent_graphics) + boardmanager.token_w / 2
       elseif opponent_board.spells[lane] then
         target = opponent_board.spells[lane]
-        _, goal_y = boardmanager.get_space_coords(lane, "spells", opponent_graphics)
+        goal_x = boardmanager.get_space_coords(lane, "spells", opponent_graphics) + boardmanager.token_w / 2
       end
       -- Get the spell's position
       local x, y = boardmanager.get_space_coords(lane, "spells", player_graphics)
       -- Create the attack
-      attackmanager.add_attack(token, target, x + boardmanager.token_w / 2, y + boardmanager.token_h / 2, goal_y + boardmanager.token_h / 2)
+      attackmanager.add_attack(token, target, x + boardmanager.token_w / 2, goal_x, y + boardmanager.token_h / 2)
     end
   end
 end
@@ -143,7 +161,7 @@ end
 
 -- Puts the given card on the given board on the given lane
 boardmanager.place_card = function(board, card, lane)
-  board[card.type][lane] = {value = card.value, card = card}
+  board[card.type][lane] = {value = card.value, type = card.type, card = card}
 end
 
 -- This function will be overridden by either the client or server
@@ -183,11 +201,11 @@ end
 
 -- Get the screen position of a space
 boardmanager.get_space_coords = function(lane, type, graphics_data)
-  local x = graphics_data.x + (lane - 1) * boardmanager.token_w
-  local y = graphics_data.y
+  local x = graphics_data.x
   if type ~= graphics_data.top then
-    y = y + boardmanager.token_h
+    x = x + boardmanager.token_w
   end
+  local y = graphics_data.y + (lane - 1) * boardmanager.token_h
   return x, y
 end
 
