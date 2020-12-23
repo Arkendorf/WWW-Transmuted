@@ -23,6 +23,12 @@ end
 client.update = function(dt)
   network.client.update(dt)
   game.update(dt)
+
+  -- If opponent has left, end game
+  if network.client.get_status == "disconnected" then
+    game.message = "Opponent forfeited"
+    game.over()
+  end
 end
 
 client.draw = function()

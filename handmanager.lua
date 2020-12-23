@@ -41,7 +41,7 @@ handmanager.update = function(dt)
   -- Update hand graphics
   for i, graphic in ipairs(handmanager.hand_graphics) do
     -- Check to see if the card is hovered over
-    local mx, my = love.mouse.getPosition()
+    local mx, my = get_mouse_pos()
     if mx > graphic.x and mx < graphic.x + deckmanager.card_w and my > graphic.y and my < graphic.y + deckmanager.card_h then
       -- mark this card as hovered over
       handmanager.hover = i
@@ -55,8 +55,8 @@ handmanager.update = function(dt)
       goal_x = mx - deckmanager.card_w / 2
       goal_y = my - deckmanager.card_h / 2
     else -- Otherwise, put it at the right position on the bottom of the screen
-      goal_x = (love.graphics:getWidth() - #handmanager.hand * deckmanager.card_w) / 2 + (i-1) * deckmanager.card_w
-      goal_y = love.graphics:getHeight() - deckmanager.card_h
+      goal_x = (get_window_w() - #handmanager.hand * deckmanager.card_w) / 2 + (i-1) * deckmanager.card_w
+      goal_y = get_window_h() - deckmanager.card_h
       -- Move the card up a bit if it is selected or hovered over
       if handmanager.selected == i then
         goal_y = goal_y - 60
@@ -72,9 +72,15 @@ end
 
 handmanager.draw = function(dt)
   for i, graphic in ipairs(handmanager.hand_graphics) do
-    love.graphics.rectangle("line", graphic.x, graphic.y, deckmanager.card_w, deckmanager.card_h)
-    love.graphics.print(graphic.card.name, graphic.x, graphic.y)
+    handmanager.draw_card(graphic)
   end
+end
+
+handmanager.draw_card = function(graphic)
+  love.graphics.rectangle("line", graphic.x, graphic.y, deckmanager.card_w, deckmanager.card_h)
+  love.graphics.print(graphic.card.name, graphic.x, graphic.y)
+  love.graphics.print(graphic.card.type, graphic.x, graphic.y + 20)
+  love.graphics.print(graphic.card.value, graphic.x, graphic.y + 40)
 end
 
 -- Called when the mouse is pressed
@@ -100,7 +106,7 @@ handmanager.keypressed = function(key)
   if game.state == "place" then
     -- Convert numerical key to a selected card
     local i = tonumber(key)
-    if i > 0 and i <= handmanager.hand_size then
+    if i and i > 0 and i <= handmanager.hand_size then
       handmanager.selected = i
     end
   end

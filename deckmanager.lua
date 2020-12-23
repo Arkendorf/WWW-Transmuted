@@ -5,16 +5,17 @@ local deckmanager = {}
 deckmanager.deck = {}
 deckmanager.deck_size = 20
 
-deckmanager.card_w = 100
-deckmanager.card_h = 160
-
-deckmanager.x = love.graphics.getWidth() - deckmanager.card_w - deckmanager.deck_size
-deckmanager.y = love.graphics.getHeight() - deckmanager.card_h
+deckmanager.card_w = 64
+deckmanager.card_h = 96
 
 deckmanager.load = function()
+  -- Determine dech graphic position
+  deckmanager.x = get_window_w() - deckmanager.card_w - deckmanager.deck_size
+  deckmanager.y = get_window_h() - deckmanager.card_h
+
   -- Replace deck generation later, perhaps allow customization
   for i = 1, deckmanager.deck_size do
-    deckmanager.deck[i] = cards[math.random(1, #cards)]
+    deckmanager.deck[i] = cards[i % 20]
   end
 end
 

@@ -26,6 +26,12 @@ end
 server.update = function(dt)
   network.server.update(dt)
   game.update(dt)
+
+  -- If opponent has left, end game
+  if #network.server.get_peers() < 1 then
+    game.message = "Opponent forfeited"
+    game.over()
+  end
 end
 
 server.draw = function()

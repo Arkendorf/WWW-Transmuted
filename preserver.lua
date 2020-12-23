@@ -27,14 +27,10 @@ preserver.load = function()
 end
 
 preserver.update = function(dt)
-  -- local mx, my = love.mouse.getPosition()
-  -- network.server.queue_all("mouse", {x = mx, y = my})
   network.server.update(dt)
 end
 
 preserver.draw = function()
-  -- love.graphics.print(address, 100, 0)
-  -- love.graphics.print("Number of clients: "..tostring(#network.server.get_peers()), 300, 0)
   love.graphics.print("Waiting for an opponent")
 end
 

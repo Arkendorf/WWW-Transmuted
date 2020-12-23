@@ -5,8 +5,6 @@ local preclient = {}
 
 local status = "disconnected"
 
---local mx, my = 400, 300
-
 preclient.load = function()
   network.client.start()
 
@@ -36,21 +34,13 @@ end
 preclient.server_button = function(address)
   if address then
     if network.client.connect(address) then
-
-      -- network.add_callback("mouse", function(data)
-      --   mx = data.x
-      --   my = data.y
-      -- end)
+      -- Returns true here
     end
   end
 end
 
 preclient.draw = function()
-  --status = network.client.get_status()
-  --love.graphics.print(status, 100, 0)
   love.graphics.print("Searching for matches...")
-
-  --love.graphics.circle("fill", mx, my, 16, 16)
 end
 
 preclient.leave = function()

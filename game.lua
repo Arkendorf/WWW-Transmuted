@@ -12,7 +12,7 @@ local game = {}
 
 -- The current game state
 game.state = "place"
-game.over_message = ""
+game.message = false
 
 game.player_turn = {}
 game.opponent_turn = {}
@@ -26,6 +26,9 @@ game.load = function()
   handmanager.load()
   attackmanager.load()
   charmanager.load()
+
+  game.state = "place"
+  game.message = false
 
   -- Saved data on player and opponent cards placed this turn
   game.player_placed = false
@@ -78,9 +81,9 @@ game.draw = function()
   handmanager.draw()
   attackmanager.draw()
   charmanager.draw()
-  
-  if game.mode == "over" then
-    love.graphics.print(game.over_message)
+
+  if game.message then
+    love.graphics.print(game.message)
   end
 end
 
@@ -98,17 +101,17 @@ game.queue = function(event, data)
 end
 
 game.win = function()
-  game.over_message = "Victory"
+  game.message = "Victory"
   game.over()
 end
 
 game.lose = function()
-  game.over_message = "Defeat"
+  game.message = "Defeat"
   game.over()
 end
 
 game.tie = function()
-  game.over_message = "Mutual Destruction"
+  game.message = "Mutual Destruction"
   game.over()
 end
 

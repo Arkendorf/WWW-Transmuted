@@ -27,6 +27,7 @@ gui.draw = function()
 end
 
 gui.mousepressed = function(x, y, button)
+  local x, y = get_mouse_pos()
   local click_used = false
   for k, v in pairs(buttons) do
     if x >= v.x and x <= v.x+v.w and y >= v.y and y <= v.y+v.h then

@@ -1,4 +1,5 @@
 local handmanager = require "handmanager"
+local deckmanager = require "deckmanager"
 local attackmanager = require "attackmanager"
 local charmanager = require "charmanager"
 
@@ -20,26 +21,33 @@ boardmanager.opponent_board = {
 boardmanager.lane_num = 3
 
 -- Size of board tokens
-boardmanager.token_w = 100
-boardmanager.token_h = 100
+boardmanager.token_w = 64
+boardmanager.token_h = 64
+
+-- space between boards
+boardmanager.board_spacing = 32
 
 -- Graphics info for player's board
 boardmanager.player_graphics = {
-  x = love.graphics.getWidth() / 2 - boardmanager.token_h * 2,
-  y = (love.graphics.getHeight() - boardmanager.token_w * boardmanager.lane_num) / 2,
   top = "spells"
 }
 
 -- Graphics info for opponent's board
 boardmanager.opponent_graphics = {
-  x = love.graphics.getWidth() / 2,
-  y = boardmanager.player_graphics.y,
   top = "shields"
 }
 
 boardmanager.hover = false
 
 boardmanager.load = function()
+  -- Determine player board position
+  boardmanager.player_graphics.x = (get_window_w() - boardmanager.board_spacing) / 2 - boardmanager.token_h * 2
+  boardmanager.player_graphics.y = (get_window_h() - deckmanager.card_h - boardmanager.token_w * boardmanager.lane_num) / 2
+
+  -- Determine opponent board position
+  boardmanager.opponent_graphics.x = (get_window_w() + boardmanager.board_spacing) / 2
+  boardmanager.opponent_graphics.y = boardmanager.player_graphics.y
+
   -- Reset boards to default state
   for _, board in ipairs({boardmanager.player_board, boardmanager.opponent_board}) do
     for i = 1, boardmanager.lane_num do
@@ -56,7 +64,7 @@ boardmanager.update = function(dt)
   -- Reset the hover
   boardmanager.hover = false
   -- Get the mouse position
-  local mx, my = love.mouse.getPosition()
+  local mx, my = get_mouse_pos()
   -- Iterate through the rows in the board
   for type, row in pairs(boardmanager.player_board) do
     -- If the row matches the type of the currently selected card then allow hovering
@@ -120,7 +128,7 @@ boardmanager.generate_attacks = function(player_board, opponent_board, player_gr
     if token then
       -- Determine the attack's target. The opponent, the shield, or the spell
       local target = opponent_char -- default should be enemy player
-      local goal_x = opponent_char.x
+      local goal_x = opponent_char.x + charmanager.char_w / 2
       if opponent_board.shields[lane] then
         target = opponent_board.shields[lane]
         goal_x = boardmanager.get_space_coords(lane, "shields", opponent_graphics) + boardmanager.token_w / 2
