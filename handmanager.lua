@@ -1,4 +1,5 @@
 local deckmanager = require "deckmanager"
+local graphics = require "graphics"
 
 local handmanager = {}
 
@@ -59,9 +60,9 @@ handmanager.update = function(dt)
       goal_y = get_window_h() - deckmanager.card_h
       -- Move the card up a bit if it is selected or hovered over
       if handmanager.selected == i then
-        goal_y = goal_y - 60
+        goal_y = goal_y - 24
       elseif handmanager.hover == i then
-        goal_y = goal_y - 20
+        goal_y = goal_y - 8
       end
     end
     -- Move the card towards the goal position
@@ -76,11 +77,24 @@ handmanager.draw = function(dt)
   end
 end
 
+-- Draws a card based on the given graphic info
 handmanager.draw_card = function(graphic)
-  love.graphics.rectangle("line", graphic.x, graphic.y, deckmanager.card_w, deckmanager.card_h)
-  love.graphics.print(graphic.card.name, graphic.x, graphic.y)
-  love.graphics.print(graphic.card.type, graphic.x, graphic.y + 20)
-  love.graphics.print(graphic.card.value, graphic.x, graphic.y + 40)
+  -- Floor x and y position
+  local x, y = math.floor(graphic.x), math.floor(graphic.y)
+  -- Use the correct card base depending on the type
+  if graphic.card.type == "shields" then
+    love.graphics.draw(graphics.images.card_shield, x, y)
+  else
+    love.graphics.draw(graphics.images.card_spell, x, y)
+  end
+  -- Draw the card name
+  love.graphics.setColor(0, 0, 0)
+  love.graphics.setFont(graphics.fonts.small)
+  love.graphics.printf(graphic.card.name, x, y + 78, deckmanager.card_w, "center")
+  -- Draw the card value
+  love.graphics.setColor(1, 1, 1)
+  love.graphics.setFont(graphics.fonts.small_border)
+  love.graphics.printf(graphic.card.value, x, y + 56, deckmanager.card_w, "center")
 end
 
 -- Called when the mouse is pressed

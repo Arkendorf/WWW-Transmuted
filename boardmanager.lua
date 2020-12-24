@@ -2,6 +2,7 @@ local handmanager = require "handmanager"
 local deckmanager = require "deckmanager"
 local attackmanager = require "attackmanager"
 local charmanager = require "charmanager"
+local graphics = require "graphics"
 
 boardmanager = {}
 
@@ -21,8 +22,8 @@ boardmanager.opponent_board = {
 boardmanager.lane_num = 3
 
 -- Size of board tokens
-boardmanager.token_w = 64
-boardmanager.token_h = 64
+boardmanager.token_w = 66
+boardmanager.token_h = 66
 
 -- space between boards
 boardmanager.board_spacing = 32
@@ -194,16 +195,15 @@ end
 boardmanager.draw_space = function(token, lane, type, graphics_data, editable)
   -- Convert data to the position of the space
   local x, y = boardmanager.get_space_coords(lane, type, graphics_data)
-  -- Draw the space's outline
-  -- If the board is the local players, highlight spaces where the selected card can be placed
-  if editable and handmanager.selected and handmanager.hand[handmanager.selected].type == type then
-    love.graphics.rectangle("fill", x, y, boardmanager.token_h, boardmanager.token_w)
-  else
-    love.graphics.rectangle("line", x, y, boardmanager.token_h, boardmanager.token_w)
-  end
+  -- Draw the space backing
+  love.graphics.draw(graphics.images.token_empty, x, y)
   -- Draw the card token in the space
   if token then
     boardmanager.draw_token(token, x, y)
+  end
+  -- If the board is the local players, highlight spaces where the selected card can be placed
+  if editable and handmanager.selected and handmanager.hand[handmanager.selected].type == type then
+    love.graphics.draw(graphics.images.token_highlight, x, y)
   end
 end
 
@@ -219,8 +219,14 @@ end
 
 -- Draws a token based on the given card
 boardmanager.draw_token = function(token, x, y)
-  love.graphics.rectangle("line", x, y, boardmanager.token_h, boardmanager.token_w)
-  love.graphics.print(token.value, x, y)
+  love.graphics.draw(graphics.images.token, x, y)
+  if token.type == "shields" then
+    love.graphics.draw(graphics.images.shield, x + (boardmanager.token_w - 32) / 2, y + (boardmanager.token_h - 32) / 2)
+  else
+    love.graphics.draw(graphics.images.spell, x + (boardmanager.token_w - 32) / 2, y + (boardmanager.token_h - 32) / 2)
+  end
+  love.graphics.setFont(graphics.fonts.large_numbers)
+  love.graphics.printf(token.value, x, y + 26, boardmanager.token_w, "center")
 end
 
 return boardmanager

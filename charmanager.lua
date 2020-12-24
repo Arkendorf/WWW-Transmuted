@@ -1,4 +1,5 @@
 local deckmanager = require "deckmanager"
+local graphics = require "graphics"
 
 local charmanager = {}
 
@@ -7,8 +8,8 @@ charmanager.player = {type = "char"}
 charmanager.opponent = {type = "char"}
 
 -- Size of the character on screen
-charmanager.char_w = 128
-charmanager.char_h = 256
+charmanager.char_w = 162
+charmanager.char_h = 258
 
 -- Starting hp of characters
 charmanager.char_hp = 20
@@ -23,6 +24,15 @@ charmanager.load = function()
   charmanager.opponent.x = get_window_w() - charmanager.char_w
   charmanager.opponent.y = charmanager.player.y
   charmanager.opponent.value = charmanager.char_hp
+
+  -- Set who is who
+  if mode == "server" then
+    charmanager.player.char = "gandalf"
+    charmanager.opponent.char = "crimson"
+  else
+    charmanager.player.char = "crimson"
+    charmanager.opponent.char = "gandalf"
+  end
 end
 
 charmanager.update = function(dt)
@@ -49,7 +59,11 @@ end
 
 -- Draws a character
 charmanager.draw_char = function(char_data)
-  love.graphics.rectangle("line", char_data.x, char_data.y, charmanager.char_w, charmanager.char_h)
+  if char_data.char == "crimson" then
+    love.graphics.draw(graphics.images.crimson_wizard, char_data.x, char_data.y)
+  else
+    love.graphics.draw(graphics.images.gandalf, char_data.x, char_data.y)
+  end
   love.graphics.print(char_data.value, char_data.x, char_data.y)
 end
 

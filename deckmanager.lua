@@ -1,12 +1,13 @@
 local cards = require "cards"
+local graphics = require "graphics"
 
 local deckmanager = {}
 
 deckmanager.deck = {}
 deckmanager.deck_size = 20
 
-deckmanager.card_w = 64
-deckmanager.card_h = 96
+deckmanager.card_w = 66
+deckmanager.card_h = 98
 
 deckmanager.load = function()
   -- Determine dech graphic position
@@ -24,7 +25,7 @@ end
 
 deckmanager.draw = function()
   for i, card in ipairs(deckmanager.deck) do
-    love.graphics.rectangle("line", deckmanager.x + i - 1, deckmanager.y, deckmanager.card_w, deckmanager.card_h)
+    love.graphics.draw(graphics.images.card_back, math.floor(deckmanager.x) + i - 1, math.floor(deckmanager.y))
   end
 end
 
