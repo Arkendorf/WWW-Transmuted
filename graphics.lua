@@ -9,6 +9,7 @@ graphics.images.card_back = love.graphics.newImage("images/card_back.png")
 graphics.images.token_empty = love.graphics.newImage("images/token_empty.png")
 graphics.images.token = love.graphics.newImage("images/token.png")
 graphics.images.token_highlight = love.graphics.newImage("images/token_highlight.png")
+graphics.images.token_select = love.graphics.newImage("images/token_select.png")
 graphics.images.shield = love.graphics.newImage("images/shield.png")
 graphics.images.spell = love.graphics.newImage("images/spell.png")
 -- Characters

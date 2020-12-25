@@ -203,7 +203,11 @@ boardmanager.draw_space = function(token, lane, type, graphics_data, editable)
   end
   -- If the board is the local players, highlight spaces where the selected card can be placed
   if editable and handmanager.selected and handmanager.hand[handmanager.selected].type == type then
-    love.graphics.draw(graphics.images.token_highlight, x, y)
+    if boardmanager.hover and boardmanager.hover == lane then
+      love.graphics.draw(graphics.images.token_select, x, y)
+    else
+      love.graphics.draw(graphics.images.token_highlight, x, y)
+    end
   end
 end
 
