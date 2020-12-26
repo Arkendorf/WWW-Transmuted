@@ -1,9 +1,14 @@
+local graphics = require "graphics"
+
 local attackmanager = {}
 
 -- List of attack projectiles
 attackmanager.attacks = {}
 -- Attack projectile speed
 attackmanager.attack_speed = 500;
+
+-- Shake magnitude
+attackmanager.shake_mag = 3
 
 attackmanager.load = function()
   attackmanager.attacks = {}
@@ -20,8 +25,10 @@ attackmanager.update = function(dt)
     if attack.x * attack.dir >= attack.goal_x * attack.dir then
       if attack.target.type == "spells" then
         attack.target.value = 0
+        attack.target.shake = .2
       else
         attack.target.value = attack.target.value - attack.value
+        attack.target.shake = .1 * attack.value
       end
       table.remove(attackmanager.attacks, i)
     end
@@ -30,7 +37,7 @@ end
 
 attackmanager.draw = function()
   for i, attack in ipairs(attackmanager.attacks) do
-    love.graphics.circle("fill", attack.x, attack.y, 30, 30)
+    love.graphics.draw(graphics.images.attack, attack.x, attack.y, 0, 1, 1, 17, 17)
   end
 end
 

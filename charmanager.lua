@@ -1,4 +1,5 @@
 local deckmanager = require "deckmanager"
+local attackmanager = require "attackmanager"
 local graphics = require "graphics"
 
 local charmanager = {}
@@ -49,6 +50,13 @@ charmanager.update = function(dt)
   elseif opponent_dead then -- Victory!
     game.win()
   end
+
+  -- Update players
+  for i, char in ipairs({charmanager.player, charmanager.opponent}) do
+    if char.shake then
+      char.shake = char.shake - dt
+    end
+  end
 end
 
 -- Draw both players
@@ -59,12 +67,17 @@ end
 
 -- Draws a character
 charmanager.draw_char = function(char_data)
-  if char_data.char == "crimson" then
-    love.graphics.draw(graphics.images.crimson_wizard, char_data.x, char_data.y)
-  else
-    love.graphics.draw(graphics.images.gandalf, char_data.x, char_data.y)
+  local x, y = char_data.x, char_data.y
+  if char_data.shake and char_data.shake > 0 then
+    x = x + math.random(-attackmanager.shake_mag, attackmanager.shake_mag)
+    y = y + math.random(-attackmanager.shake_mag, attackmanager.shake_mag)
   end
-  love.graphics.print(char_data.value, char_data.x, char_data.y)
+  if char_data.char == "crimson" then
+    love.graphics.draw(graphics.images.crimson_wizard, x, y)
+  else
+    love.graphics.draw(graphics.images.gandalf, x, y)
+  end
+  love.graphics.print(char_data.value, x, y)
 end
 
 return charmanager

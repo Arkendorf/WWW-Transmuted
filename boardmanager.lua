@@ -30,13 +30,19 @@ boardmanager.board_spacing = 32
 
 -- Graphics info for player's board
 boardmanager.player_graphics = {
-  top = "spells"
+  top = "spells",
+  editable = true,
 }
 
 -- Graphics info for opponent's board
 boardmanager.opponent_graphics = {
-  top = "shields"
+  top = "shields",
+  editable = false,
 }
+
+-- How much the token should dip when placed
+boardmanager.place_dip = 2
+boardmanager.dip_speed = 12
 
 boardmanager.hover = false
 
@@ -59,8 +65,8 @@ boardmanager.load = function()
 end
 
 boardmanager.update = function(dt)
-  boardmanager.check_death(boardmanager.player_board)
-  boardmanager.check_death(boardmanager.opponent_board)
+  boardmanager.update_board(boardmanager.player_board, dt)
+  boardmanager.update_board(boardmanager.opponent_board, dt)
 
   -- Reset the hover
   boardmanager.hover = false
@@ -109,14 +115,27 @@ boardmanager.update = function(dt)
 end
 
 -- Checks if tokens have died
-boardmanager.check_death = function(board)
+boardmanager.update_board = function(board, dt)
   -- Iterate through the rows of the board
   for type, row in pairs(board) do
     -- Iterate through the lanes on that row
     for lane, token in ipairs(row) do
-      -- If the token exists and it's value is less than or equal to zero, remove it
-      if token and token.value <= 0 then
-        board[type][lane] = false
+      if token then
+        -- Don't kill it if it is still shaking
+        -- it's value is less than or equal to zero, remove it
+        if token.shake and token.shake > 0 then
+          token.shake = token.shake - dt
+        elseif token.value <= 0 then
+          board[type][lane] = false
+        end
+        -- If token is dipping, control the dip
+        if token.y > 0 or token.dip > 0 then
+          token.y = token.y + token.dip
+          token.dip = token.dip - dt * boardmanager.dip_speed
+        else -- Reset the dip
+          token.y = 0
+          token.dip = 0
+        end
       end
     end
   end
@@ -170,7 +189,7 @@ end
 
 -- Puts the given card on the given board on the given lane
 boardmanager.place_card = function(board, card, lane)
-  board[card.type][lane] = {value = card.value, type = card.type, card = card}
+  board[card.type][lane] = {value = card.value, type = card.type, card = card, y = 0, dip = boardmanager.place_dip}
 end
 
 -- This function will be overridden by either the client or server
@@ -195,8 +214,21 @@ end
 boardmanager.draw_space = function(token, lane, type, graphics_data, editable)
   -- Convert data to the position of the space
   local x, y = boardmanager.get_space_coords(lane, type, graphics_data)
+  -- Add shake if it is shaking
+  if token then
+    if token.shake and token.shake > 0 then
+      x = x + math.random(-attackmanager.shake_mag, attackmanager.shake_mag)
+      y = y + math.random(-attackmanager.shake_mag, attackmanager.shake_mag)
+    end
+    -- Add dip offset
+    y = y + token.y
+  end
   -- Draw the space backing
-  love.graphics.draw(graphics.images.token_empty, x, y)
+  if graphics_data.editable then
+    love.graphics.draw(graphics.images.token_empty, x, y)
+  else
+    love.graphics.draw(graphics.images.token_opponent, x, y)
+  end
   -- Draw the card token in the space
   if token then
     boardmanager.draw_token(token, x, y)
@@ -223,12 +255,15 @@ end
 
 -- Draws a token based on the given card
 boardmanager.draw_token = function(token, x, y)
+  -- Draw token base
   love.graphics.draw(graphics.images.token, x, y)
+  -- Draw token type
   if token.type == "shields" then
     love.graphics.draw(graphics.images.shield, x + (boardmanager.token_w - 32) / 2, y + (boardmanager.token_h - 32) / 2)
   else
     love.graphics.draw(graphics.images.spell, x + (boardmanager.token_w - 32) / 2, y + (boardmanager.token_h - 32) / 2)
   end
+  -- Draw token value
   love.graphics.setFont(graphics.fonts.large_numbers)
   love.graphics.printf(token.value, x, y + 26, boardmanager.token_w, "center")
 end
