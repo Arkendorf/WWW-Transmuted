@@ -5,8 +5,15 @@ local graphics = require "graphics"
 local charmanager = {}
 
 -- Player objects
-charmanager.player = {type = "char"}
-charmanager.opponent = {type = "char"}
+charmanager.player = {
+  type = "char",
+  dir = 1,
+}
+
+charmanager.opponent = {
+  type = "char",
+  dir = -1,
+}
 
 -- Size of the character on screen
 charmanager.char_w = 162
@@ -77,7 +84,10 @@ charmanager.draw_char = function(char_data)
   else
     love.graphics.draw(graphics.images.gandalf, x, y)
   end
-  love.graphics.print(char_data.value, x, y)
+
+  local value_x, value_y = x + charmanager.char_w / 2 - 25, y + charmanager.char_h / 2 - 25
+  love.graphics.draw(graphics.images.large_shield, value_x, value_y)
+  love.graphics.printf(char_data.value, value_x, value_y + 18, 50, "center")
 end
 
 return charmanager

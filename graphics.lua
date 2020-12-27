@@ -16,6 +16,7 @@ graphics.images.spell = love.graphics.newImage("images/spell.png")
 -- Characters
 graphics.images.crimson_wizard = love.graphics.newImage("images/crimson_wizard.png")
 graphics.images.gandalf = love.graphics.newImage("images/gandalf.png")
+graphics.images.large_shield = love.graphics.newImage("images/large_shield.png")
 -- attack
 graphics.images.attack = love.graphics.newImage("images/attack.png")
 

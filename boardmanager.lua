@@ -22,8 +22,8 @@ boardmanager.opponent_board = {
 boardmanager.lane_num = 3
 
 -- Size of board tokens
-boardmanager.token_w = 66
-boardmanager.token_h = 66
+boardmanager.token_w = 88
+boardmanager.token_h = 88
 
 -- space between boards
 boardmanager.board_spacing = 32
@@ -265,7 +265,8 @@ boardmanager.draw_token = function(token, x, y)
   end
   -- Draw token value
   love.graphics.setFont(graphics.fonts.large_numbers)
-  love.graphics.printf(token.value, x, y + 26, boardmanager.token_w, "center")
+  love.graphics.printf(math.max(token.value, 0), x, y + 37, boardmanager.token_w, "center")
+
 end
 
 return boardmanager
