@@ -90,11 +90,11 @@ handmanager.draw_card = function(graphic)
   -- Draw the card name
   love.graphics.setColor(0, 0, 0)
   love.graphics.setFont(graphics.fonts.small)
-  love.graphics.printf(graphic.card.name, x, y + 78, deckmanager.card_w, "center")
+  love.graphics.printf(graphic.card.name, x, y + 112, deckmanager.card_w, "center")
   -- Draw the card value
   love.graphics.setColor(1, 1, 1)
-  love.graphics.setFont(graphics.fonts.small_border)
-  love.graphics.printf(graphic.card.value, x, y + 56, deckmanager.card_w, "center")
+  love.graphics.setFont(graphics.fonts.large_numbers)
+  love.graphics.printf(graphic.card.value, x, y + 81, deckmanager.card_w, "center")
 end
 
 -- Called when the mouse is pressed

@@ -6,8 +6,8 @@ local deckmanager = {}
 deckmanager.deck = {}
 deckmanager.deck_size = 20
 
-deckmanager.card_w = 66
-deckmanager.card_h = 98
+deckmanager.card_w = 98
+deckmanager.card_h = 138
 
 deckmanager.load = function()
   -- Determine dech graphic position

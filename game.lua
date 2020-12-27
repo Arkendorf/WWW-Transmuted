@@ -76,11 +76,11 @@ game.update = function(dt)
 end
 
 game.draw = function()
+  charmanager.draw()
   boardmanager.draw()
   deckmanager.draw()
-  handmanager.draw()
   attackmanager.draw()
-  charmanager.draw()
+  handmanager.draw()
 
   if game.message then
     love.graphics.print(game.message)
