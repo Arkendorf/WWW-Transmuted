@@ -183,6 +183,8 @@ local address = false
 
 -- Whether the server is broadcasting
 local is_broadcasting = false
+-- Bonus string to send when the server broadcasts ip to clients
+local bonus_string = false
 
 -- The list of peers connected to the server
 local peers = {}
@@ -301,7 +303,11 @@ network.server.listen = function()
     while data do
       -- If the potential client has sent the right password, send them the server's address
       if data == password and is_broadcasting then
-        udp:sendto(address, ip, port)
+        local send_data = address
+        if bonus_string then
+          send_data = send_data .. " " .. tostring(bonus_string)
+        end
+        udp:sendto(send_data, ip, port)
       end
       data, ip, port = udp:receivefrom()
     end
@@ -312,6 +318,12 @@ end
 network.server.set_broadcasting = function(bool)
   is_broadcasting = bool
 end
+
+-- Sets wether the server is broadcasting its I.P. or not
+network.server.set_bonus_string = function(str)
+  bonus_string = str
+end
+
 
 -- Returns the list of peers connected to the server
 network.server.get_peers = function()
@@ -537,7 +549,16 @@ network.client.listen = function()
   if active then
     local data, ip, port = udp:receivefrom()
     while data do
-      table.insert(valid_addresses, data)
+      -- See if there is bonus data
+      local split_char = string.find(data, " ")
+      local address = data
+      local bonus_string = false
+      -- If there is, parse it
+      if split_char then
+        address = string.sub(data, 1, split_char-1)
+        bonus_string = string.sub(data, split_char+1, -1)
+      end
+      table.insert(valid_addresses, {address = address, bonus_string = bonus_string})
       data, ip, port = udp:receivefrom()
     end
   end

@@ -9,8 +9,6 @@ server.load = function(peer)
   math.randomseed(os.time()+1)
   opponent = peer
 
-  game.load()
-
   game.queue = function(event, data)
     network.server.queue(event, data, opponent)
   end
@@ -21,6 +19,8 @@ server.load = function(peer)
     mode = "mainmenu"
     mainmenu.load()
   end
+
+  game.load()
 end
 
 server.update = function(dt)

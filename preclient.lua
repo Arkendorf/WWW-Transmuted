@@ -21,8 +21,8 @@ preclient.update = function(dt)
   if network.client.get_status() == "disconnected" then
     gui.remove_all()
     local num = 0
-    for i, address in ipairs(network.client.get_addresses()) do
-      gui.new_button("server" .. tostring(i), 0, 16 + (i-1)*28, 128, 24, tostring(i)..". "..address, preclient.server_button, address)
+    for i, data in ipairs(network.client.get_addresses()) do
+      gui.new_button("server" .. tostring(i), 0, 16 + (i-1)*28, 128, 24, data.bonus_string, preclient.server_button, data.address)
       num = i
     end
     gui.new_button("leave", 0, 16 + num*28, 128, 24, "Back to Main", preclient.leave)
@@ -34,7 +34,6 @@ end
 preclient.server_button = function(address)
   if address then
     if network.client.connect(address) then
-      -- Returns true here
     end
   end
 end

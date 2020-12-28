@@ -65,6 +65,15 @@ game.load = function()
   end)
   -- Set the networked keys for card data
   network.set_keys("card", {"card_num", "lane"})
+
+  -- Called when the opponent is telling the player their name
+  network.add_callback("name", function(data)
+    charmanager.opponent.name = data
+  end)
+  -- Set name
+  charmanager.player.name = mainmenu.name
+  -- Send player name
+  game.queue("name", charmanager.player.name)
 end
 
 game.update = function(dt)

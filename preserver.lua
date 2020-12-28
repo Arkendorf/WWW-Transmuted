@@ -10,6 +10,7 @@ preserver.load = function()
   network.server.start()
   address = network.server.get_address()
   network.server.set_broadcasting(true)
+  network.server.set_bonus_string(mainmenu.name)
 
   -- Set up the gui
   gui.new_button("leave", 0, 20, 128, 24, "Leave", preserver.leave)

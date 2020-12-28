@@ -2,7 +2,7 @@ local gui = require "gui"
 
 local mainmenu = {}
 
-mainmenu.name = ""
+mainmenu.name = "Wizard"
 
 mainmenu.load = function()
   gui.load()

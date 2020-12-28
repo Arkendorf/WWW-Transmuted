@@ -25,7 +25,7 @@ charmanager.char_hp = 20
 charmanager.load = function()
   -- Set initial player pos and hp
   charmanager.player.x = 0
-  charmanager.player.y = (get_window_h() - charmanager.char_h - deckmanager.card_h) / 2
+  charmanager.player.y = (get_window_h() - charmanager.char_h - deckmanager.card_h + graphics.fonts.large:getHeight() + 2) / 2
   charmanager.player.value = charmanager.char_hp
 
   -- Set initial opponent pos and hp
@@ -85,8 +85,14 @@ charmanager.draw_char = function(char_data)
     love.graphics.draw(graphics.images.gandalf, x, y)
   end
 
+  if char_data.name then
+    love.graphics.setFont(graphics.fonts.large)
+    love.graphics.printf(char_data.name, x, y - graphics.fonts.large:getHeight() - 2, charmanager.char_w, "center")
+  end
+
   local value_x, value_y = x + charmanager.char_w / 2 - 25, y + charmanager.char_h / 2 - 25
   love.graphics.draw(graphics.images.large_shield, value_x, value_y)
+  love.graphics.setFont(graphics.fonts.large_numbers)
   love.graphics.printf(char_data.value, value_x, value_y + 18, 50, "center")
 end
 

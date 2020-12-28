@@ -6,8 +6,6 @@ local client = {}
 client.load = function()
   math.randomseed(os.time())
 
-  game.load()
-
   game.queue = function(event, data)
     network.client.queue(event, data)
   end
@@ -18,6 +16,8 @@ client.load = function()
     mode = "mainmenu"
     mainmenu.load()
   end
+
+  game.load()
 end
 
 client.update = function(dt)
