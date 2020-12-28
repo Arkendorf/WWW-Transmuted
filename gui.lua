@@ -1,28 +1,77 @@
+local graphics = require "graphics"
+
 local gui = {}
 
 local buttons = {}
 local textboxes = {}
 local textbox = nil
 
+local highlight = nil
+
+local t = 0
+local thresh = .5
+
 gui.load = function()
   love.keyboard.setKeyRepeat(true)
 end
 
 gui.update = function(dt)
+  -- Get highlight
+  highlight = nil
+  local x, y = get_mouse_pos()
+  for k, v in pairs(buttons) do
+    if x >= v.x and x <= v.x+v.w and y >= v.y and y <= v.y+v.h then
+      highlight = k
+    end
+  end
+  for k, v in pairs(textboxes) do
+    if x >= v.x and x <= v.x+v.w and y >= v.y and y <= v.y+v.h then
+      highlight = k
+    end
+  end
+
+  -- Textbox blink timer
+  t = t + dt
+  if t > thresh * 2 then
+    t = 0
+  end
 end
 
 gui.draw = function()
   for k, v in pairs(buttons) do
-    love.graphics.rectangle("line", v.x, v.y, v.w, v.h)
-    love.graphics.print(v.text, v.x, v.y)
+    if highlight == k then
+      love.graphics.draw(graphics.gui.button_highlight, v.x, v.y)
+    else
+      love.graphics.draw(graphics.gui.button, v.x, v.y)
+    end
+    love.graphics.setFont(graphics.fonts.large)
+    love.graphics.print(v.text, v.x + 6, v.y + 6)
+
+    --love.graphics.rectangle("line", v.x, v.y, v.w, v.h)
+    --love.graphics.print(v.text, v.x, v.y)
   end
   for k, v in pairs(textboxes) do
-    love.graphics.rectangle("line", v.x, v.y, v.w, v.h)
+    -- Set text
+    local text = v.text
     if v.table[v.index] ~= "" then
-      love.graphics.print(tostring(v.table[v.index]), v.x, v.y)
-    else
-      love.graphics.print(v.text, v.x, v.y)
+      text = tostring(v.table[v.index])
     end
+    -- Choose background
+    if textbox == k then
+      love.graphics.draw(graphics.gui.textbox_selected, v.x, v.y)
+      if t > thresh then
+        text = text .. "|"
+      end
+    elseif highlight == k then
+      love.graphics.draw(graphics.gui.textbox_highlight, v.x, v.y)
+    else
+      love.graphics.draw(graphics.gui.textbox, v.x, v.y)
+    end
+    -- Draw text
+    love.graphics.setFont(graphics.fonts.large)
+    love.graphics.print(text, v.x + 6, v.y + 6)
+
+    -- love.graphics.rectangle("line", v.x, v.y, v.w, v.h)
   end
 end
 

@@ -22,10 +22,10 @@ preclient.update = function(dt)
     gui.remove_all()
     local num = 0
     for i, address in ipairs(network.client.get_addresses()) do
-      gui.new_button("server" .. tostring(i), 0, 20 + (i-1)*50, 200, 50, tostring(i)..". "..address, preclient.server_button, address)
+      gui.new_button("server" .. tostring(i), 0, 16 + (i-1)*28, 128, 24, tostring(i)..". "..address, preclient.server_button, address)
       num = i
     end
-    gui.new_button("leave", 0, 20 + num*50, 200, 50, "Back to Main", preclient.leave)
+    gui.new_button("leave", 0, 16 + num*28, 128, 24, "Back to Main", preclient.leave)
   end
 
   network.client.update(dt)

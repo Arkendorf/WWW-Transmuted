@@ -2,6 +2,7 @@ local handmanager = require "handmanager"
 local deckmanager = require "deckmanager"
 local attackmanager = require "attackmanager"
 local charmanager = require "charmanager"
+local cards = require "cards"
 local graphics = require "graphics"
 
 boardmanager = {}
@@ -93,15 +94,15 @@ boardmanager.update = function(dt)
   end
 
   -- If both the player and the opponent have placed their cards, move on to the next part of the game
-  if game.opponent_placed and game.opponent_turn.card then
+  if game.opponent_placed and game.opponent_turn.card_num then
     -- Place the opponent's card visually on the board
-    boardmanager.place_card(boardmanager.opponent_board, game.opponent_turn.card, game.opponent_turn.lane)
+    boardmanager.place_card(boardmanager.opponent_board, cards[game.opponent_turn.card_num], game.opponent_turn.lane)
     -- Reset opponent card after it has been added
     game.opponent_placed = false
-    game.opponent_turn.card = false
+    game.opponent_turn.card_num = false
     -- Reset player card after it has been added
     game.placed_placed = false
-    game.player_turn.card = false
+    game.player_turn.card_num = false
     -- Move on to the next game state
     game.state = "simulate"
     -- Generate attacks
@@ -257,11 +258,15 @@ end
 boardmanager.draw_token = function(token, x, y)
   -- Draw token base
   love.graphics.draw(graphics.images.token, x, y)
+  -- Draw the token image
+  if token.card.image then
+    love.graphics.draw(token.card.image, x, y)
+  end
   -- Draw token type
   if token.type == "shields" then
-    love.graphics.draw(graphics.images.shield, x + (boardmanager.token_w - 32) / 2, y + (boardmanager.token_h - 32) / 2)
+    love.graphics.draw(graphics.images.shield, x + (boardmanager.token_w - 34) / 2, y + (boardmanager.token_h - 34) / 2)
   else
-    love.graphics.draw(graphics.images.spell, x + (boardmanager.token_w - 32) / 2, y + (boardmanager.token_h - 32) / 2)
+    love.graphics.draw(graphics.images.spell, x + (boardmanager.token_w - 34) / 2, y + (boardmanager.token_h - 34) / 2)
   end
   -- Draw token value
   love.graphics.setFont(graphics.fonts.large_numbers)

@@ -39,7 +39,7 @@ game.load = function()
     -- Mark that the player has placed their card
     game.player_placed = true
     -- Save important info on the card the player just placed
-    game.player_turn.card = card
+    game.player_turn.card_num = card.num
     game.player_turn.lane = lane
     -- Let the opponent know that the player has placed their card
     game.queue("placed", true)
@@ -64,7 +64,7 @@ game.load = function()
     game.opponent_turn = data
   end)
   -- Set the networked keys for card data
-  network.set_keys("card", {"card", "lane"})
+  network.set_keys("card", {"card_num", "lane"})
 end
 
 game.update = function(dt)
@@ -117,7 +117,7 @@ end
 
 game.over = function()
   game.mode = "over"
-  gui.new_button("leave", 0, 20, 200, 50, "Leave", game.leave)
+  gui.new_button("leave", 0, 20, 128, 24, "Leave", game.leave)
 end
 
 -- Should be overridden

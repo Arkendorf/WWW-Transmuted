@@ -12,7 +12,7 @@ preserver.load = function()
   network.server.set_broadcasting(true)
 
   -- Set up the gui
-  gui.new_button("leave", 0, 20, 200, 50, "Leave", preserver.leave)
+  gui.new_button("leave", 0, 20, 128, 24, "Leave", preserver.leave)
 
   -- Callback for when client connects
   network.add_callback("connect", function(data, peer)

@@ -4,18 +4,21 @@ cards[1] = {
   name = "Common Bullet",
   type = "spells",
   value = 1,
+  image = love.graphics.newImage("images/cards/common_bullet.png"),
 }
 
 cards[2] = {
   name = "Brick Wall",
   type = "shields",
   value = 3,
+  image = love.graphics.newImage("images/cards/brick_wall.png"),
 }
 
 cards[3] = {
   name = "Man of Steel",
   type = "shields",
   value = 2,
+  image = love.graphics.newImage("images/cards/man_of_steel.png"),
 }
 
 cards[4] = {
@@ -114,7 +117,9 @@ cards[19] = {
   value = 2,
 }
 
-
-
+-- Give each card a reference to it's number
+for i, card in ipairs(cards) do
+  card.num = i
+end
 
 return cards

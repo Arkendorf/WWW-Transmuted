@@ -20,6 +20,17 @@ graphics.images.large_shield = love.graphics.newImage("images/large_shield.png")
 -- attack
 graphics.images.attack = love.graphics.newImage("images/attack.png")
 
+-- gui
+graphics.gui = {}
+-- Button
+graphics.gui.button = love.graphics.newImage("images/button.png")
+graphics.gui.button_highlight = love.graphics.newImage("images/button_highlight.png")
+-- textbox
+graphics.gui.textbox = love.graphics.newImage("images/textbox.png")
+graphics.gui.textbox_highlight = love.graphics.newImage("images/textbox_highlight.png")
+graphics.gui.textbox_selected = love.graphics.newImage("images/textbox_selected.png")
+
+-- Fonts
 graphics.fonts = {}
 graphics.fonts.small = love.graphics.newImageFont("images/small_font.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZ" ..
     "abcdefghijklmnopqrstuvwxyz" ..
@@ -28,5 +39,9 @@ graphics.fonts.small_border = love.graphics.newImageFont("images/small_font_bord
     "abcdefghijklmnopqrstuvwxyz" ..
     "0123456789!?.,:-*()")
 graphics.fonts.large_numbers = love.graphics.newImageFont("images/large_numbers.png", "0123456789")
+graphics.fonts.large = love.graphics.newImageFont("images/large_font.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZ" ..
+    "abcdefghijklmnopqrstuvwxyz" ..
+    "0123456789!?.,:-*()/'‘’\"“”|", 1)
+love.graphics.setFont(graphics.fonts.large)
 
 return graphics
