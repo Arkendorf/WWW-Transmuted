@@ -25,18 +25,21 @@ cards[4] = {
   name = "Navy Plane",
   type = "spells",
   value = 2,
+  image = love.graphics.newImage("images/cards/navy_plane.png"),
 }
 
 cards[5] = {
   name = "Radioactive Bullet",
   type = "spells",
   value = 2,
+  image = love.graphics.newImage("images/cards/radioactive_bullet.png"),
 }
 
 cards[6] = {
   name = "Boom Boom Pow",
   type = "spells",
   value = 3,
+  image = love.graphics.newImage("images/cards/boom_boom_pow.png"),
 }
 
 cards[7] = {

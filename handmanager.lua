@@ -83,7 +83,7 @@ handmanager.draw_card = function(graphic)
   local x, y = math.floor(graphic.x), math.floor(graphic.y)
   -- Draw the card graphic
   if graphic.card.image then
-    love.graphics.draw(graphic.card.image, x + 6, y + 6)
+    love.graphics.draw(graphic.card.image, x + 5, y + 6)
   end
   -- Use the correct card base depending on the type
   if graphic.card.type == "shields" then

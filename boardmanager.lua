@@ -43,7 +43,7 @@ boardmanager.opponent_graphics = {
 
 -- How much the token should dip when placed
 boardmanager.place_dip = 2
-boardmanager.dip_speed = 12
+boardmanager.dip_speed = 16
 
 boardmanager.hover = false
 
@@ -215,24 +215,25 @@ end
 boardmanager.draw_space = function(token, lane, type, graphics_data, editable)
   -- Convert data to the position of the space
   local x, y = boardmanager.get_space_coords(lane, type, graphics_data)
+  local shake_x, shake_y = boardmanager.get_space_coords(lane, type, graphics_data)
   -- Add shake if it is shaking
   if token then
     if token.shake and token.shake > 0 then
-      x = x + math.random(-attackmanager.shake_mag, attackmanager.shake_mag)
-      y = y + math.random(-attackmanager.shake_mag, attackmanager.shake_mag)
+      shake_x = shake_x + math.random(-attackmanager.shake_mag, attackmanager.shake_mag)
+      shake_y = shake_y + math.random(-attackmanager.shake_mag, attackmanager.shake_mag)
     end
     -- Add dip offset
-    y = y + token.y
+    shake_y = shake_y + token.y
   end
   -- Draw the space backing
   if graphics_data.editable then
-    love.graphics.draw(graphics.images.token_empty, x, y)
+    love.graphics.draw(graphics.images.token_empty, shake_x, shake_y)
   else
-    love.graphics.draw(graphics.images.token_opponent, x, y)
+    love.graphics.draw(graphics.images.token_opponent, shake_x, shake_y)
   end
   -- Draw the card token in the space
   if token then
-    boardmanager.draw_token(token, x, y)
+    boardmanager.draw_token(token, x, y, shake_x, shake_y)
   end
   -- If the board is the local players, highlight spaces where the selected card can be placed
   if editable and handmanager.selected and handmanager.hand[handmanager.selected].type == type then
@@ -255,12 +256,12 @@ boardmanager.get_space_coords = function(lane, type, graphics_data)
 end
 
 -- Draws a token based on the given card
-boardmanager.draw_token = function(token, x, y)
+boardmanager.draw_token = function(token, x, y, shake_x, shake_y)
   -- Draw token base
-  love.graphics.draw(graphics.images.token, x, y)
+  love.graphics.draw(graphics.images.token, shake_x, shake_y)
   -- Draw the token image
   if token.card.image then
-    love.graphics.draw(token.card.image, x, y)
+    love.graphics.draw(token.card.image, shake_x, shake_y)
   end
   -- Draw token type
   if token.type == "shields" then

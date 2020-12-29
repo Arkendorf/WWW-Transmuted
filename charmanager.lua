@@ -87,10 +87,10 @@ charmanager.draw_char = function(char_data)
 
   if char_data.name then
     love.graphics.setFont(graphics.fonts.large)
-    love.graphics.printf(char_data.name, x, y - graphics.fonts.large:getHeight() - 2, charmanager.char_w, "center")
+    love.graphics.printf(char_data.name, char_data.x, char_data.y - graphics.fonts.large:getHeight() - 2, charmanager.char_w, "center")
   end
 
-  local value_x, value_y = x + charmanager.char_w / 2 - 25, y + charmanager.char_h / 2 - 25
+  local value_x, value_y = char_data.x + charmanager.char_w / 2 - 25, char_data.y + charmanager.char_h / 2 - 25
   love.graphics.draw(graphics.images.large_shield, value_x, value_y)
   love.graphics.setFont(graphics.fonts.large_numbers)
   love.graphics.printf(char_data.value, value_x, value_y + 18, 50, "center")
