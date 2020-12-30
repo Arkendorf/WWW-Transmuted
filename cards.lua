@@ -46,18 +46,21 @@ cards[7] = {
   name = "King Kong",
   type = "spells",
   value = 3,
+  image = love.graphics.newImage("images/cards/king_kong.png"),
 }
 
 cards[8] = {
   name = "Castle Gates",
   type = "shields",
   value = 2,
+  image = love.graphics.newImage("images/cards/castle_gates.png"),
 }
 
 cards[9] = {
-  name = "Attack!",
+  name = "Attack",
   type = "spells",
   value = 1,
+  image = love.graphics.newImage("images/cards/attack.png"),
 }
 
 cards[10] = {
@@ -85,7 +88,7 @@ cards[13] = {
 }
 
 cards[14] = {
-  name = "Shield!",
+  name = "Shield",
   type = "shields",
   value = 2,
 }
@@ -109,7 +112,7 @@ cards[17] = {
 }
 
 cards[18] = {
-  name = "Force Field!",
+  name = "Force Field",
   type = "shields",
   value = 3,
 }
