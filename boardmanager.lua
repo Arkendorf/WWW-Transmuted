@@ -96,7 +96,7 @@ boardmanager.update = function(dt)
   -- If both the player and the opponent have placed their cards, move on to the next part of the game
   if (game.opponent_placed and game.opponent_turn.card_num)
     -- If player and opponent are out of cards, continue to simulate until someone dies
-    or (game.state == "place" and game.player_out and game.opponent_out and charmanager.player.value > 0 and charmanager.opponent.value > 0) then
+    or (game.state == "place" and game.player_out and game.opponent_out) then
 
     if game.opponent_turn.card_num then
       -- Place the opponent's card visually on the board
@@ -115,7 +115,7 @@ boardmanager.update = function(dt)
     boardmanager.generate_attacks(boardmanager.opponent_board, boardmanager.player_board, boardmanager.opponent_graphics, boardmanager.player_graphics, charmanager.player)
   end
 
-  if game.state == "simulate" and #attackmanager.attacks <= 0 then
+  if game.state == "simulate" and attackmanager.attacks_over() then
     game.state = "place"
   end
 
@@ -179,11 +179,15 @@ boardmanager.generate_attacks = function(player_board, opponent_board, player_gr
       -- Determine the attack's target. The opponent, the shield, or the spell
       local target = opponent_char -- default should be enemy player
       local goal_x = opponent_char.x + charmanager.char_w / 2
-      if opponent_board.shields[lane] then
-        target = opponent_board.shields[lane]
+      -- Get reference to shield and spell
+      local shield = opponent_board.shields[lane]
+      local spell = opponent_board.spells[lane]
+      -- If shield exists and isn't about to die, target it
+      if shield and shield.value > 0 then
+        target = shield
         goal_x = boardmanager.get_space_coords(lane, "shields", opponent_graphics) + boardmanager.token_w / 2
-      elseif opponent_board.spells[lane] then
-        target = opponent_board.spells[lane]
+      elseif spell and spell.value > 0 then -- If spell exists and isn't about to die, target it
+        target = spell
         goal_x = boardmanager.get_space_coords(lane, "spells", opponent_graphics) + boardmanager.token_w / 2
       end
       -- Get the spell's position

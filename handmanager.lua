@@ -21,7 +21,7 @@ handmanager.load = function()
   -- Reset hand and graphics
   handmanager.hand_graphics = {}
   handmanager.hand = {}
-  
+
   handmanager.fill_hand(deckmanager.deck)
 end
 

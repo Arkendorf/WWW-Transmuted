@@ -147,7 +147,7 @@ game.tie_out = function()
 end
 
 game.over = function()
-  game.mode = "over"
+  game.state = "over"
   gui.new_button("leave", 0, 20, 128, 24, "Leave", game.leave)
 end
 
