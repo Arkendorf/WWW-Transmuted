@@ -53,7 +53,7 @@ gui.draw = function()
   for k, v in pairs(textboxes) do
     -- Set text
     local text = v.text
-    if v.table[v.index] ~= "" then
+    if v.table[v.index] ~= "" or textbox == k then
       text = tostring(v.table[v.index])
     end
     -- Choose background

@@ -4,7 +4,7 @@ local graphics = require "graphics"
 local deckmanager = {}
 
 deckmanager.deck = {}
-deckmanager.deck_size = 5
+deckmanager.deck_size = 20
 
 deckmanager.card_w = 98
 deckmanager.card_h = 138

@@ -67,12 +67,14 @@ cards[10] = {
   name = "Superman",
   type = "shields",
   value = 2,
+  image = love.graphics.newImage("images/cards/superman.png"),
 }
 
 cards[11] = {
   name = "Sword",
   type = "spells",
   value = 2,
+  image = love.graphics.newImage("images/cards/sword.png"),
 }
 
 cards[12] = {

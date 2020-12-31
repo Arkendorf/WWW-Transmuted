@@ -5,6 +5,9 @@ server = require "server"
 client = require "client"
 game = require "game"
 
+shaders = require "shaders"
+palettes = require "palettes"
+
 local gui = require "gui"
 
 mode = "mainmenu"
@@ -21,6 +24,12 @@ love.load = function()
   canvas = love.graphics.newCanvas(love.graphics.getWidth() / scale, love.graphics.getHeight() / scale)
 
   mainmenu.load()
+
+  -- Set the colors
+  local i = 11
+  shaders.palette:send("light", palettes[i].light)
+  shaders.palette:send("dark", palettes[i].dark)
+  love.graphics.setBackgroundColor(palettes[i].dark)
 end
 
 love.update = function(dt)
@@ -40,6 +49,8 @@ love.update = function(dt)
 end
 
 love.draw = function()
+  -- Reset shader
+  love.graphics.setShader()
   -- Switch to the main canvas
   love.graphics.setCanvas(canvas)
   -- Clear the canvas
@@ -59,6 +70,8 @@ love.draw = function()
     client.draw()
   end
 
+  -- Set the shader to the palette-swap shader
+  love.graphics.setShader(shaders.palette)
   -- Draw the main canvas
   love.graphics.setCanvas()
   love.graphics.draw(canvas, 0, 0, 0, scale, scale)
