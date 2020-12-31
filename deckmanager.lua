@@ -4,19 +4,20 @@ local graphics = require "graphics"
 local deckmanager = {}
 
 deckmanager.deck = {}
-deckmanager.deck_size = 20
+deckmanager.deck_size = 5
 
 deckmanager.card_w = 98
 deckmanager.card_h = 138
 
 deckmanager.load = function()
-  -- Determine dech graphic position
+  -- Determine deck graphic position
   deckmanager.x = get_window_w() - deckmanager.card_w - deckmanager.deck_size
   deckmanager.y = get_window_h() - deckmanager.card_h
 
   -- Replace deck generation later, perhaps allow customization
+  deckmanager.deck = {}
   for i = 1, deckmanager.deck_size do
-    deckmanager.deck[i] = cards[i % 20]
+    deckmanager.deck[i] = cards[i % #cards]
   end
 end
 

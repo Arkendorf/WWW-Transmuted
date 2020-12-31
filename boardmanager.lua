@@ -94,15 +94,20 @@ boardmanager.update = function(dt)
   end
 
   -- If both the player and the opponent have placed their cards, move on to the next part of the game
-  if game.opponent_placed and game.opponent_turn.card_num then
-    -- Place the opponent's card visually on the board
-    boardmanager.place_card(boardmanager.opponent_board, cards[game.opponent_turn.card_num], game.opponent_turn.lane)
-    -- Reset opponent card after it has been added
-    game.opponent_placed = false
-    game.opponent_turn.card_num = false
-    -- Reset player card after it has been added
-    game.placed_placed = false
-    game.player_turn.card_num = false
+  if (game.opponent_placed and game.opponent_turn.card_num)
+    -- If player and opponent are out of cards, continue to simulate until someone dies
+    or (game.state == "place" and game.player_out and game.opponent_out and charmanager.player.value > 0 and charmanager.opponent.value > 0) then
+
+    if game.opponent_turn.card_num then
+      -- Place the opponent's card visually on the board
+      boardmanager.place_card(boardmanager.opponent_board, cards[game.opponent_turn.card_num], game.opponent_turn.lane)
+      -- Reset opponent card after it has been added
+      game.opponent_placed = false
+      game.opponent_turn.card_num = false
+      -- Reset player card after it has been added
+      game.placed_placed = false
+      game.player_turn.card_num = false
+    end
     -- Move on to the next game state
     game.state = "simulate"
     -- Generate attacks
@@ -112,6 +117,30 @@ boardmanager.update = function(dt)
 
   if game.state == "simulate" and #attackmanager.attacks <= 0 then
     game.state = "place"
+  end
+
+  -- Check if player is out of cards
+  if #handmanager.hand <= 0 then
+    if not game.player_out then
+      -- Let opponent know that player is out
+      game.player_out = true
+      game.queue("out")
+    elseif game.player_out and game.opponent_out then -- If both player and opponent are out of cards, and there no active spells, tie game
+      -- Check for active spells
+      local out = true
+      for i, board in ipairs({boardmanager.player_board, boardmanager.opponent_board}) do
+        for lane, token in ipairs(board.spells) do
+          if token then
+            out = false
+            break
+          end
+        end
+      end
+      -- No more spells are active, end the game in a tie
+      if out then
+        game.tie_out()
+      end
+    end
   end
 end
 
@@ -185,6 +214,8 @@ boardmanager.place_player_card = function()
     handmanager.card_placed()
     -- Let whoever's handling the network know that the player has placed their card
     boardmanager.network_card_placed(selected_card, boardmanager.hover, selected_card.type)
+
+    boardmanager.hover = false
   end
 end
 

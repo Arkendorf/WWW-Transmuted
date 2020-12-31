@@ -51,7 +51,7 @@ charmanager.update = function(dt)
   -- Check for endgame scenarios
   -- Tie game
   if player_dead and opponent_dead then
-    game.tie()
+    game.tie_death()
   elseif player_dead then -- Defeat
     game.lose()
   elseif opponent_dead then -- Victory!
@@ -93,7 +93,7 @@ charmanager.draw_char = function(char_data)
   local value_x, value_y = char_data.x + charmanager.char_w / 2 - 25, char_data.y + charmanager.char_h / 2 - 25
   love.graphics.draw(graphics.images.large_shield, value_x, value_y)
   love.graphics.setFont(graphics.fonts.large_numbers)
-  love.graphics.printf(char_data.value, value_x, value_y + 18, 50, "center")
+  love.graphics.printf(math.max(0, char_data.value), value_x, value_y + 18, 50, "center")
 end
 
 return charmanager

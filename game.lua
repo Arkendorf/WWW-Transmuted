@@ -5,6 +5,7 @@ local deckmanager = require "deckmanager"
 local boardmanager = require "boardmanager"
 local attackmanager = require "attackmanager"
 local charmanager = require "charmanager"
+local graphics = require "graphics"
 
 local network = require "network"
 
@@ -14,10 +15,16 @@ local game = {}
 game.state = "place"
 game.message = false
 
+-- Data about the players' turns
 game.player_turn = {}
 game.opponent_turn = {}
+-- Whether players have placed their card this turn
 game.player_placed = false
 game.opponent_placed = false
+
+-- Whether or not opponent is out of cards
+game.player_out = false
+game.opponent_out = false
 
 
 game.load = function()
@@ -33,6 +40,10 @@ game.load = function()
   -- Saved data on player and opponent cards placed this turn
   game.player_placed = false
   game.opponent_placed = false
+
+  -- Whether or not opponent is out of cards
+  game.player_out = false
+  game.opponent_out = false
 
   -- Function that is called when a card is placed on the board
   boardmanager.network_card_placed = function(card, lane, type)
@@ -66,6 +77,11 @@ game.load = function()
   -- Set the networked keys for card data
   network.set_keys("card", {"card_num", "lane"})
 
+  -- Whether the opponent is out of cards
+  network.add_callback("out", function(data)
+    game.opponent_out = true
+  end)
+
   -- Called when the opponent is telling the player their name
   network.add_callback("name", function(data)
     charmanager.opponent.name = data
@@ -92,6 +108,7 @@ game.draw = function()
   handmanager.draw()
 
   if game.message then
+    love.graphics.setFont(graphics.fonts.large)
     love.graphics.print(game.message)
   end
 end
@@ -119,8 +136,13 @@ game.lose = function()
   game.over()
 end
 
-game.tie = function()
+game.tie_death = function()
   game.message = "Mutual Destruction"
+  game.over()
+end
+
+game.tie_out = function()
+  game.message = "Magic Exhausted"
   game.over()
 end
 
