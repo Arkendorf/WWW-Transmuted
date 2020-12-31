@@ -81,10 +81,11 @@ cards[12] = {
   name = "Armor",
   type = "shields",
   value = 3,
+  image = love.graphics.newImage("images/cards/armor.png"),
 }
 
 cards[13] = {
-  name = "Parashute",
+  name = "Parachute",
   type = "spells",
   value = 2,
 }
