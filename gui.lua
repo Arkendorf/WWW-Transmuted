@@ -3,6 +3,7 @@ local graphics = require "graphics"
 local gui = {}
 
 local buttons = {}
+local texts = {}
 local textboxes = {}
 local textbox = nil
 
@@ -13,6 +14,7 @@ local thresh = .5
 
 gui.load = function()
   love.keyboard.setKeyRepeat(true)
+  gui.remove_all()
 end
 
 gui.update = function(dt)
@@ -38,6 +40,7 @@ gui.update = function(dt)
 end
 
 gui.draw = function()
+  -- Draw buttons
   for k, v in pairs(buttons) do
     if highlight == k then
       love.graphics.draw(graphics.gui.button_highlight, v.x, v.y)
@@ -50,6 +53,7 @@ gui.draw = function()
     --love.graphics.rectangle("line", v.x, v.y, v.w, v.h)
     --love.graphics.print(v.text, v.x, v.y)
   end
+  -- Draw textboxes
   for k, v in pairs(textboxes) do
     -- Set text
     local text = v.text
@@ -72,6 +76,11 @@ gui.draw = function()
     love.graphics.print(text, v.x + 6, v.y + 6)
 
     -- love.graphics.rectangle("line", v.x, v.y, v.w, v.h)
+  end
+  -- Draw texts
+  for k, v in pairs(texts) do
+    love.graphics.setFont(graphics.fonts.large)
+    love.graphics.printf(v.text, v.x + 6, v.y + 6, v.w, v.mode)
   end
 end
 
@@ -140,9 +149,18 @@ gui.remove_textbox  = function(id)
   textboxes[id] = nil
 end
 
+gui.new_text = function(id, x, y, w, text, mode)
+  texts[id] = {x = x, y = y, w = w, text = text, mode = mode}
+end
+
+gui.remove_text = function(id)
+  texts[id] = nil
+end
+
 gui.remove_all = function()
   buttons = {}
   textboxes = {}
+  texts = {}
 end
 
 return gui

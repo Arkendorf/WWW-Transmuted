@@ -47,9 +47,12 @@ handmanager.update = function(dt)
   for i, graphic in ipairs(handmanager.hand_graphics) do
     -- Check to see if the card is hovered over
     local mx, my = get_mouse_pos()
-    if mx > graphic.x and mx < graphic.x + deckmanager.card_w and my > graphic.y and my < graphic.y + deckmanager.card_h then
-      -- mark this card as hovered over
-      handmanager.hover = i
+    -- Only do the hover effect when in the right game state
+    if game.state == "place" then
+      if mx > graphic.x and mx < graphic.x + deckmanager.card_w and my > graphic.y and my < graphic.y + deckmanager.card_h then
+        -- mark this card as hovered over
+        handmanager.hover = i
+      end
     end
 
     -- Find the goal position for the current card graphic
@@ -83,26 +86,28 @@ end
 
 -- Draws a card based on the given graphic info
 handmanager.draw_card = function(graphic)
-  -- Floor x and y position
-  local x, y = math.floor(graphic.x), math.floor(graphic.y)
-  -- Draw the card graphic
-  if graphic.card.image then
-    love.graphics.draw(graphic.card.image, x + 5, y + 6)
+  if graphic.card then
+    -- Floor x and y position
+    local x, y = math.floor(graphic.x), math.floor(graphic.y)
+    -- Draw the card graphic
+    if graphic.card.image then
+      love.graphics.draw(graphic.card.image, x + 5, y + 6)
+    end
+    -- Use the correct card base depending on the type
+    if graphic.card.type == "shields" then
+      love.graphics.draw(graphics.images.card_shield, x, y)
+    else
+      love.graphics.draw(graphics.images.card_spell, x, y)
+    end
+    -- Draw the card name
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.setFont(graphics.fonts.small)
+    love.graphics.printf(graphic.card.name, x, y + 112, deckmanager.card_w, "center")
+    -- Draw the card value
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.setFont(graphics.fonts.large_numbers)
+    love.graphics.printf(graphic.card.value, x, y + 81, deckmanager.card_w, "center")
   end
-  -- Use the correct card base depending on the type
-  if graphic.card.type == "shields" then
-    love.graphics.draw(graphics.images.card_shield, x, y)
-  else
-    love.graphics.draw(graphics.images.card_spell, x, y)
-  end
-  -- Draw the card name
-  love.graphics.setColor(0, 0, 0)
-  love.graphics.setFont(graphics.fonts.small)
-  love.graphics.printf(graphic.card.name, x, y + 112, deckmanager.card_w, "center")
-  -- Draw the card value
-  love.graphics.setColor(1, 1, 1)
-  love.graphics.setFont(graphics.fonts.large_numbers)
-  love.graphics.printf(graphic.card.value, x, y + 81, deckmanager.card_w, "center")
 end
 
 -- Called when the mouse is pressed

@@ -1,5 +1,4 @@
 local network = require "network"
-local gui = require "gui"
 
 local server = {}
 
@@ -15,7 +14,6 @@ server.load = function(peer)
 
   game.leave = function()
     network.server.quit()
-    gui.remove_all()
     mode = "mainmenu"
     mainmenu.load()
   end
@@ -26,12 +24,6 @@ end
 server.update = function(dt)
   network.server.update(dt)
   game.update(dt)
-
-  -- If opponent has left, end game
-  if #network.server.get_peers() < 1 then
-    game.message = "Opponent forfeited"
-    game.over()
-  end
 end
 
 server.draw = function()
@@ -39,6 +31,10 @@ server.draw = function()
 end
 
 server.quit = function()
+  -- Queue a message telling clients server has quit
+  network.server.queue_all("quit")
+  -- Force it to send
+  network.server.send_queue()
   network.server.quit()
 end
 

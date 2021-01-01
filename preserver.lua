@@ -1,5 +1,6 @@
 local network = require "network"
 local gui = require "gui"
+local guimanager = require "guimanager"
 
 local preserver = {}
 
@@ -12,8 +13,12 @@ preserver.load = function()
   network.server.set_broadcasting(true)
   network.server.set_bonus_string(mainmenu.name)
 
-  -- Set up the gui
-  gui.new_button("leave", 0, 20, 128, 24, "Leave", preserver.leave)
+  -- Reset gui
+  guimanager.reset_window()
+  -- Set up gui
+  guimanager.set_title("Host Match")
+  guimanager.new_text("msg", 1, "Waiting for an opponent", "center")
+  guimanager.new_button("leave", guimanager.bottom_slot, "Leave", preserver.leave)
 
   -- Callback for when client connects
   network.add_callback("connect", function(data, peer)
@@ -21,7 +26,7 @@ preserver.load = function()
     network.server.set_broadcasting(false)
 
     -- Switch to main server mode
-    gui.remove_all()
+    guimanager.reset_window()
     mode = "server"
     server.load(peer)
   end)
@@ -32,12 +37,10 @@ preserver.update = function(dt)
 end
 
 preserver.draw = function()
-  love.graphics.print("Waiting for an opponent")
 end
 
 preserver.leave = function()
   network.server.quit()
-  gui.remove_all()
   mode = "mainmenu"
   mainmenu.load()
 end

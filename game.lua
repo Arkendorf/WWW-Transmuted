@@ -6,6 +6,7 @@ local boardmanager = require "boardmanager"
 local attackmanager = require "attackmanager"
 local charmanager = require "charmanager"
 local graphics = require "graphics"
+local guimanager = require "guimanager"
 
 local network = require "network"
 
@@ -33,6 +34,9 @@ game.load = function()
   handmanager.load()
   attackmanager.load()
   charmanager.load()
+
+  -- reset gui
+  guimanager.reset_window()
 
   game.state = "place"
   game.message = false
@@ -90,6 +94,11 @@ game.load = function()
   charmanager.player.name = mainmenu.name
   -- Send player name
   game.queue("name", charmanager.player.name)
+
+  -- Sent when the opponent disconnects
+  network.add_callback("disconnect", function()
+    game.forfeit()
+  end)
 end
 
 game.update = function(dt)
@@ -106,11 +115,6 @@ game.draw = function()
   deckmanager.draw()
   attackmanager.draw()
   handmanager.draw()
-
-  if game.message then
-    love.graphics.setFont(graphics.fonts.large)
-    love.graphics.print(game.message)
-  end
 end
 
 game.mousepressed = function(x, y, button)
@@ -146,9 +150,16 @@ game.tie_out = function()
   game.over()
 end
 
+game.forfeit = function()
+  game.message = "Opponent Forfeited"
+  game.over()
+end
+
 game.over = function()
   game.state = "over"
-  gui.new_button("leave", 0, 20, 128, 24, "Leave", game.leave)
+  -- Set up gui
+  guimanager.set_title(game.message)
+  guimanager.new_button("leave", guimanager.bottom_slot, "Leave", game.leave)
 end
 
 -- Should be overridden

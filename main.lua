@@ -9,6 +9,7 @@ shaders = require "shaders"
 palettes = require "palettes"
 
 local gui = require "gui"
+local guimanager = require "guimanager"
 
 mode = "mainmenu"
 
@@ -23,6 +24,7 @@ love.load = function()
   love.window.setTitle("Witchy Wizard Wars Transmuted")
   canvas = love.graphics.newCanvas(love.graphics.getWidth() / scale, love.graphics.getHeight() / scale)
 
+  guimanager.load()
   mainmenu.load()
 
   -- Set the colors
@@ -33,7 +35,7 @@ love.load = function()
 end
 
 love.update = function(dt)
-  gui.update(dt)
+  guimanager.update(dt)
 
   if mode == "mainmenu" then
     mainmenu.update(dt)
@@ -57,7 +59,6 @@ love.draw = function()
   love.graphics.clear()
 
   -- Draw everything
-  gui.draw()
   if mode == "mainmenu" then
     mainmenu.draw()
   elseif mode == "preserver" then
@@ -69,6 +70,8 @@ love.draw = function()
   elseif mode == "client" then
     client.draw()
   end
+  -- Draw GUI on top
+  guimanager.draw()
 
   -- Set the shader to the palette-swap shader
   love.graphics.setShader(shaders.palette)

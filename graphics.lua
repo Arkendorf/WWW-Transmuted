@@ -22,6 +22,7 @@ graphics.images.attack = love.graphics.newImage("images/attack.png")
 
 -- gui
 graphics.gui = {}
+graphics.gui.menu = love.graphics.newImage("images/menu.png")
 -- Button
 graphics.gui.button = love.graphics.newImage("images/button.png")
 graphics.gui.button_highlight = love.graphics.newImage("images/button_highlight.png")
