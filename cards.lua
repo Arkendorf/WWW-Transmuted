@@ -88,18 +88,21 @@ cards[13] = {
   name = "Parachute",
   type = "spells",
   value = 2,
+  image = love.graphics.newImage("images/cards/parachute.png"),
 }
 
 cards[14] = {
   name = "Shield",
   type = "shields",
   value = 2,
+  image = love.graphics.newImage("images/cards/shield.png"),
 }
 
 cards[15] = {
   name = "Zuko",
   type = "spells",
   value = 3,
+  image = love.graphics.newImage("images/cards/zuko.png"),
 }
 
 cards[16] = {
