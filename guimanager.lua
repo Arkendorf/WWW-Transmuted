@@ -22,7 +22,7 @@ guimanager.element_h = 0
 guimanager.slots = {}
 
 -- The amount of pixels between gui elements
-guimanager.element_buffer = 4
+guimanager.buffer = 4
 guimanager.bottom_slot = 8
 
 guimanager.load = function()
@@ -121,7 +121,7 @@ end
 -- Returns the position for an element in the given slot
 guimanager.get_position = function(slot)
   local x = guimanager.x - (guimanager.w - guimanager.element_w) / 2
-  local y = guimanager.y - guimanager.h / 2 + 28 + (slot - 1) * (guimanager.element_h + guimanager.element_buffer)
+  local y = guimanager.y - guimanager.h / 2 + 28 + (slot - 1) * (guimanager.element_h + guimanager.buffer)
   return x, y
 end
 

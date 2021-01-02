@@ -37,6 +37,7 @@ preserver.update = function(dt)
 end
 
 preserver.draw = function()
+  mainmenu.draw()
 end
 
 preserver.leave = function()

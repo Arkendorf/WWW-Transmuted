@@ -20,6 +20,8 @@ graphics.images.large_shield = love.graphics.newImage("images/large_shield.png")
 -- attack
 graphics.images.attack = love.graphics.newImage("images/attack.png")
 
+graphics.images.logo = love.graphics.newImage("images/logo.png")
+
 -- gui
 graphics.gui = {}
 graphics.gui.menu = love.graphics.newImage("images/menu.png")

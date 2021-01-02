@@ -50,6 +50,7 @@ preclient.server_button = function(address)
 end
 
 preclient.draw = function()
+  mainmenu.draw()
 end
 
 preclient.leave = function()
