@@ -109,18 +109,21 @@ cards[16] = {
   name = "Automatic stopper",
   type = "shields",
   value = 2,
+  image = love.graphics.newImage("images/cards/automatic_stopper.png"),
 }
 
 cards[17] = {
   name = "Poison Fingernails",
   type = "spells",
   value = 3,
+  image = love.graphics.newImage("images/cards/poison_fingernails.png"),
 }
 
 cards[18] = {
   name = "Force Field",
   type = "shields",
   value = 3,
+  image = love.graphics.newImage("images/cards/force_field.png"),
 }
 
 cards[19] = {
