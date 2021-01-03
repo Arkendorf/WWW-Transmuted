@@ -12,7 +12,7 @@ handmanager.hover = false
 handmanager.selected = false
 handmanager.grabbed = false
 local hold_time = 0
-local time_to_grab = .1
+local time_to_grab = .2
 
 -- The graphical representations of the cards in the hand
 handmanager.hand_graphics = {}
@@ -27,7 +27,7 @@ end
 
 handmanager.update = function(dt)
   -- Check if the player is grabbing a card
-  if handmanager.selected and love.mouse.isDown(1) then
+  if handmanager.selected and love.mouse.isDown(1) and not options.active then
     -- If mouse is still down on a card, increase the hold time
     hold_time = hold_time + dt
     -- If the hold time is above the threshold, mark the card as grabbed
@@ -48,7 +48,7 @@ handmanager.update = function(dt)
     -- Check to see if the card is hovered over
     local mx, my = get_mouse_pos()
     -- Only do the hover effect when in the right game state
-    if game.state == "place" then
+    if game.state == "place" and not options.active then
       if mx > graphic.x and mx < graphic.x + deckmanager.card_w and my > graphic.y and my < graphic.y + deckmanager.card_h then
         -- mark this card as hovered over
         handmanager.hover = i
@@ -63,7 +63,7 @@ handmanager.update = function(dt)
       goal_x = mx - deckmanager.card_w / 2
       goal_y = my - deckmanager.card_h / 2
     else -- Otherwise, put it at the right position on the bottom of the screen
-      goal_x = (get_window_w() - #handmanager.hand * deckmanager.card_w) / 2 + (i-1) * deckmanager.card_w
+      goal_x = (get_window_w() + #handmanager.hand * deckmanager.card_w) / 2 - i * deckmanager.card_w
       goal_y = get_window_h() - deckmanager.card_h
       -- Move the card up a bit if it is selected or hovered over
       if handmanager.selected == i then
@@ -112,7 +112,7 @@ end
 
 -- Called when the mouse is pressed
 handmanager.mousepressed = function(x, y, button)
-  if game.state == "place" then
+  if game.state == "place" and not options.active then
     if button == 1 then
       -- If card is hovered over, and mouse is pressed, mark that card as selected
       if handmanager.hover then

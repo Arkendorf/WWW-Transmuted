@@ -28,6 +28,13 @@ graphics.gui.menu = love.graphics.newImage("images/menu.png")
 -- Button
 graphics.gui.button = love.graphics.newImage("images/button.png")
 graphics.gui.button_highlight = love.graphics.newImage("images/button_highlight.png")
+graphics.gui.icon_button = love.graphics.newImage("images/icon_button.png")
+graphics.gui.icon_button_highlight = love.graphics.newImage("images/icon_button_highlight.png")
+graphics.gui.button_icons = love.graphics.newImage("images/button_icons.png")
+graphics.gui.button_icons_quads = {}
+for i = 1, 3 do
+  graphics.gui.button_icons_quads[i] = love.graphics.newQuad((i - 1) * 16, 0, 16, 16, graphics.gui.button_icons:getDimensions())
+end
 -- textbox
 graphics.gui.textbox = love.graphics.newImage("images/textbox.png")
 graphics.gui.textbox_highlight = love.graphics.newImage("images/textbox_highlight.png")

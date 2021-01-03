@@ -130,6 +130,7 @@ cards[19] = {
   name = "Invisible Wall",
   type = "shields",
   value = 2,
+  image = love.graphics.newImage("images/cards/invisible_wall.png"),
 }
 
 -- Give each card a reference to it's number

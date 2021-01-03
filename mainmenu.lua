@@ -14,6 +14,7 @@ mainmenu.logo_y = 0
 
 mainmenu.load = function()
   -- Reset gui
+  gui.remove_all()
   guimanager.reset_window()
 
   -- Set up the gui
@@ -35,6 +36,7 @@ mainmenu.load = function()
   gui.new_button("host", x + buffer / 2, y, element_w, element_h, "Host Match", mainmenu.host_button)
   gui.new_button("find", x + buffer / 2, y + element_h + buffer, element_w, element_h, "Find Match", mainmenu.find_button)
   gui.new_button("quit", x - element_w / 2, y + (element_h + buffer) * 2, element_w, element_h, "Quit", mainmenu.quit)
+  gui.new_icon_button("menu", x - element_w - buffer / 2, y + element_h + buffer, guimanager.icon_element_h, guimanager.icon_element_h, 1, mainmenu.options)
 
   -- Get the logo position
   mainmenu.logo_x = (get_window_w() - graphics.images.logo:getWidth()) / 2
@@ -58,13 +60,28 @@ mainmenu.draw = function(dt)
 end
 
 mainmenu.host_button = function()
+  -- Remove the gui
+  gui.remove_all()
+
   mode = "preserver"
   preserver.load()
 end
 
 mainmenu.find_button = function()
+  -- Remove the gui
+  gui.remove_all()
+
   mode = "preclient"
   preclient.load()
+end
+
+
+-- Called when option button is pressed
+mainmenu.options = function()
+  -- Remove the gui
+  gui.remove_all()
+
+  options.open(mainmenu.load)
 end
 
 mainmenu.quit = function()

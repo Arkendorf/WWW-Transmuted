@@ -5,21 +5,6 @@ local guimanager = {}
 
 -- Whether the gui window is active
 guimanager.active = false
--- The wiindow title
-guimanager.title = ""
-
--- The position and dimensions of the gui window
-guimanager.x = 0
-guimanager.y = 0
-guimanager.w = 0
-guimanager.h = 0
-
--- The dimensions of a gui element
-guimanager.element_w = 0
-guimanager.element_h = 0
-
--- The element slots
-guimanager.slots = {}
 
 -- The amount of pixels between gui elements
 guimanager.buffer = 4
@@ -39,6 +24,9 @@ guimanager.load = function()
 
   guimanager.element_w = graphics.gui.button:getWidth()
   guimanager.element_h = graphics.gui.button:getHeight()
+
+  guimanager.icon_element_w = graphics.gui.icon_button:getWidth()
+  guimanager.icon_element_h = graphics.gui.icon_button:getHeight()
 
   guimanager.title = ""
 
@@ -75,46 +63,56 @@ guimanager.set_title = function(title)
   guimanager.active = true
 end
 
--- Adds a button to the window
-guimanager.new_button = function(id, slot, text, func, args)
+guimanager.pre_add = function(slot, type, id)
   -- Deletes any button previously in the given slot
   guimanager.delete_slot(slot)
-  -- Get the elements position
-  local x, y = guimanager.get_position(slot)
-  -- Add the button
-  gui.new_button(id, x, y, guimanager.element_w, guimanager.element_h, text, func, args)
   -- Note that the slot is full
-  guimanager.slots[slot] = {type = "button", id = id}
+  guimanager.slots[slot] = {type = type, id = id}
   -- Set the gui as active, if it wasn't already
   guimanager.active = true
+  -- Get the elements position
+  return guimanager.get_position(slot)
+end
+
+-- Adds a button to the window
+guimanager.new_button = function(id, slot, text, func, args)
+  local x, y = guimanager.pre_add(slot, "button", id)
+  -- Add the button
+  gui.new_button(id, x, y, guimanager.element_w, guimanager.element_h, text, func, args)
+end
+
+-- Adds a button to the window
+guimanager.new_icon_button = function(id, slot, icon, func, args)
+  local x, y = guimanager.pre_add(slot, "button", id)
+  -- Add the button
+  gui.new_icon_button(id, x, y, guimanager.icon_element_w, guimanager.icon_element_h, icon, func, args)
 end
 
 -- Adds a button to the window
 guimanager.new_textbox = function(id, slot, text, table, index)
-  -- Deletes any button previously in the given slot
-  guimanager.delete_slot(slot)
-  -- Get the elements position
-  local x, y = guimanager.get_position(slot)
-  -- Add the button
+local x, y = guimanager.pre_add(slot, "textbox", id)
+  -- Add the textbox
   gui.new_textbox(id, x, y, guimanager.element_w, guimanager.element_h, text, table, index)
-  -- Note that the slot is full
-  guimanager.slots[slot] = {type = "button", id = id}
-  -- Set the gui as active, if it wasn't already
-  guimanager.active = true
 end
 
 guimanager.new_text = function(id, slot, text, mode)
-  -- Deletes any button previously in the given slot
-  guimanager.delete_slot(slot)
-  -- Get the elements position
-  local x, y = guimanager.get_position(slot)
+  local x, y = guimanager.pre_add(slot, "text", id)
   x = guimanager.get_window_pos()
   -- Add the button
   gui.new_text(id, x, y, guimanager.w, text, mode)
-  -- Note that the slot is full
-  guimanager.slots[slot] = {type = "text", id = id}
-  -- Set the gui as active, if it wasn't already
-  guimanager.active = true
+end
+
+guimanager.new_selector = function(id, slot, text, func)
+  local w, h = guimanager.icon_element_w, guimanager.icon_element_h
+  local x, y = guimanager.pre_add(slot, "selector", id)
+
+  gui.new_icon_button(id .. "-", x, y, w, h, 2, function(args)
+    func(-1)
+  end, {table, index})
+  gui.new_icon_button(id .. "+", x + guimanager.element_w - w, y, w, h, 3, function(args)
+    func(1)
+  end, {table, index})
+  gui.new_text(id, x + w, y, guimanager.element_w - w * 2, "Palette", "center")
 end
 
 
@@ -137,6 +135,10 @@ guimanager.delete_slot = function(slot)
       gui.remove_textbox(old_element.id)
     elseif old_element.type == "text" then
       gui.remove_text(old_element.id)
+    elseif old_element.type == "selector" then
+      gui.remove_button(old_element.id .. "-")
+      gui.remove_button(old_element.id .. "+")
+      gui.remove_text(old_element.id)
     end
   end
   guimanager.slots[slot] = false
@@ -157,8 +159,6 @@ guimanager.reset_slots = function()
   for k, v in pairs(guimanager.slots) do
     guimanager.delete_slot(k)
   end
-  -- Remove the gui
-  gui.remove_all()
 end
 
 return guimanager

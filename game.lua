@@ -35,8 +35,7 @@ game.load = function()
   attackmanager.load()
   charmanager.load()
 
-  -- reset gui
-  guimanager.reset_window()
+  game.load_gui()
 
   game.state = "place"
   game.message = false
@@ -101,6 +100,17 @@ game.load = function()
   end)
 end
 
+-- Function that loads all the gui elements
+game.load_gui = function()
+  -- reset gui
+  guimanager.reset_window()
+  -- Set up gui
+  local buffer = guimanager.buffer
+  local w, h = guimanager.icon_element_w, guimanager.icon_element_h
+  local x, y = get_window_w() - w - buffer, get_window_h() - h - buffer
+  gui.new_icon_button("menu", x, y, w, h, 1, options.toggle, game.load_gui)
+end
+
 game.update = function(dt)
   boardmanager.update(dt)
   deckmanager.update(dt)
@@ -124,6 +134,9 @@ end
 
 game.keypressed = function(key)
   handmanager.keypressed(key)
+  if key == "escape" then
+    options.toggle(game.load_gui)
+  end
 end
 
 -- Should be overridden depending on whether this user is a server or client

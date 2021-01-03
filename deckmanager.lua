@@ -11,13 +11,13 @@ deckmanager.card_h = 138
 
 deckmanager.load = function()
   -- Determine deck graphic position
-  deckmanager.x = get_window_w() - deckmanager.card_w - deckmanager.deck_size
+  deckmanager.x = 0
   deckmanager.y = get_window_h() - deckmanager.card_h
 
   -- Replace deck generation later, perhaps allow customization
   deckmanager.deck = {}
   for i = 1, deckmanager.deck_size do
-    deckmanager.deck[i] = cards[i % #cards]
+    deckmanager.deck[i] = cards[i % (#cards + 1)]
   end
 end
 

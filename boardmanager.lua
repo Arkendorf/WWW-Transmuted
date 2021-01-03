@@ -89,7 +89,7 @@ boardmanager.update = function(dt)
   end
 
   -- If the player has grabbed a card, and dropped it, try to place it
-  if handmanager.grabbed and not love.mouse.isDown(1) then
+  if handmanager.grabbed and not love.mouse.isDown(1) and not options.active then
     boardmanager.place_player_card()
   end
 
@@ -199,7 +199,7 @@ boardmanager.generate_attacks = function(player_board, opponent_board, player_gr
 end
 
 boardmanager.mousepressed = function(x, y, button)
-  if game.state == "place" then
+  if game.state == "place" and not options.active then
     if button == 1 then
       boardmanager.place_player_card()
     end
@@ -272,7 +272,7 @@ boardmanager.draw_space = function(token, lane, type, graphics_data, editable)
   end
   -- If the board is the local players, highlight spaces where the selected card can be placed
   if editable and handmanager.selected and handmanager.hand[handmanager.selected].type == type then
-    if boardmanager.hover and boardmanager.hover == lane then
+    if boardmanager.hover and boardmanager.hover == lane and not options.active then
       love.graphics.draw(graphics.images.token_select, x, y)
     else
       love.graphics.draw(graphics.images.token_highlight, x, y)

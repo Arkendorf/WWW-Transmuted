@@ -240,7 +240,7 @@ end
 -- Shuts down the udp socket, as well as the enet host
 -- Attempts to disconnect all peers
 network.server.quit = function()
-  if active then
+  if active and host then
     udp:close()
     udp = false
 
@@ -260,7 +260,7 @@ end
 -- Updates the enet portion of the server
 -- Listens for events, and activates the associated callbacks
 network.server.listen_enet = function()
-  if active then
+  if active and host then
     local event = host:service()
     -- Keep looping until no more events register
     while event do

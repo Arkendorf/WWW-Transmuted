@@ -42,13 +42,24 @@ end
 gui.draw = function()
   -- Draw buttons
   for k, v in pairs(buttons) do
-    if highlight == k then
-      love.graphics.draw(graphics.gui.button_highlight, v.x, v.y)
-    else
-      love.graphics.draw(graphics.gui.button, v.x, v.y)
+    -- Text button
+    if v.text then
+      if highlight == k then
+        love.graphics.draw(graphics.gui.button_highlight, v.x, v.y)
+      else
+        love.graphics.draw(graphics.gui.button, v.x, v.y)
+      end
+      love.graphics.setFont(graphics.fonts.large)
+      love.graphics.print(v.text, v.x + 6, v.y + 6)
+    -- Icon button
+    elseif v.icon then
+      if highlight == k then
+        love.graphics.draw(graphics.gui.icon_button_highlight, v.x, v.y)
+      else
+        love.graphics.draw(graphics.gui.icon_button, v.x, v.y)
+      end
+      love.graphics.draw(graphics.gui.button_icons, graphics.gui.button_icons_quads[v.icon], v.x + 4, v.y + 4)
     end
-    love.graphics.setFont(graphics.fonts.large)
-    love.graphics.print(v.text, v.x + 6, v.y + 6)
 
     --love.graphics.rectangle("line", v.x, v.y, v.w, v.h)
     --love.graphics.print(v.text, v.x, v.y)
@@ -80,7 +91,7 @@ gui.draw = function()
   -- Draw texts
   for k, v in pairs(texts) do
     love.graphics.setFont(graphics.fonts.large)
-    love.graphics.printf(v.text, v.x + 6, v.y + 6, v.w, v.mode)
+    love.graphics.printf(v.text, v.x, v.y + 6, v.w, v.mode)
   end
 end
 
@@ -123,6 +134,10 @@ end
 
 gui.new_button = function(id, x, y, w, h, text, func, args)
   buttons[id] = {x = x, y = y, w = w, h = h, text = text, func = func, args = args}
+end
+
+gui.new_icon_button = function(id, x, y, w, h, icon, func, args)
+  buttons[id] = {x = x, y = y, w = w, h = h, icon = icon, func = func, args = args}
 end
 
 gui.edit_button = function(id, item, value)

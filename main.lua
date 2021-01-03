@@ -1,12 +1,11 @@
 mainmenu = require "mainmenu"
+options = require "options"
 preserver = require "preserver"
 preclient = require "preclient"
 server = require "server"
 client = require "client"
 game = require "game"
-
 shaders = require "shaders"
-palettes = require "palettes"
 
 local gui = require "gui"
 local guimanager = require "guimanager"
@@ -20,18 +19,13 @@ scale = 2
 
 love.load = function()
   love.graphics.setDefaultFilter("nearest", "nearest")
-  love.window.setMode(600, 800, {fullscreen=true})
-  love.window.setTitle("Witchy Wizard Wars Transmuted")
   canvas = love.graphics.newCanvas(love.graphics.getWidth() / scale, love.graphics.getHeight() / scale)
 
   guimanager.load()
   mainmenu.load()
 
-  -- Set the colors
-  local i = 11
-  shaders.palette:send("light", palettes[i].light)
-  shaders.palette:send("dark", palettes[i].dark)
-  love.graphics.setBackgroundColor(palettes[i].dark)
+  -- Set the initial palette
+  options.set_palette(8)
 end
 
 love.update = function(dt)
