@@ -19,8 +19,15 @@ graphics.images.gandalf = love.graphics.newImage("images/gandalf.png")
 graphics.images.large_shield = love.graphics.newImage("images/large_shield.png")
 -- attack
 graphics.images.attack = love.graphics.newImage("images/attack.png")
-
+-- Logo
 graphics.images.logo = love.graphics.newImage("images/logo.png")
+-- particles
+-- Dust
+graphics.images.dust = love.graphics.newImage("images/dust.png")
+graphics.images.dust_quads = {}
+for i = 1, 14 do
+  graphics.images.dust_quads[i] = love.graphics.newQuad((i - 1) * 32, 0, 32, 32, graphics.images.dust:getDimensions())
+end
 
 -- gui
 graphics.gui = {}

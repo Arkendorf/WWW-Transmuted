@@ -228,9 +228,14 @@ end
 boardmanager.place_card = function(board, card, lane, graphics)
   board[card.type][lane] = {value = card.value, type = card.type, card = card, y = 0, dip = boardmanager.place_dip}
   -- Particles
+  -- Get particle position
   local x, y = boardmanager.get_space_coords(lane, card.type, graphics)
-  for i = 1, 10 do
-    particlemanager.new("dust", x + boardmanager.token_w / 2, y + boardmanager.token_h / 2)
+  -- Center particles on the token
+  x = x + boardmanager.token_w / 2
+  y = y + boardmanager.token_h / 2
+  -- Generate 8 random dust particles
+  for i = 1, 8 do
+    particlemanager.new("dust", x, y)
   end
 end
 
