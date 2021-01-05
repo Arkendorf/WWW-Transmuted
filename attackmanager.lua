@@ -1,4 +1,5 @@
 local graphics = require "graphics"
+local particlemanager = require "particlemanager"
 
 local attackmanager = {}
 
@@ -10,17 +11,30 @@ attackmanager.attack_speed = 500
 -- Shake magnitude
 attackmanager.shake_mag = 3
 
+-- How many seconds to wait between each trail particle spawn
+attackmanager.trail_t = .03
+
 attackmanager.load = function()
+  attackmanager.t = 0
   attackmanager.attacks = {}
 end
 
 attackmanager.update = function(dt)
+  -- Keep track of time
+  attackmanager.t = attackmanager.t + dt
+
   -- Iterate backwards through attacks
   for i = #attackmanager.attacks, 1, -1 do
     -- Get the current attack
     attack = attackmanager.attacks[i]
     -- Move the attack
     attack.x = attack.x + attack.dir * attackmanager.attack_speed * dt
+
+    -- Spawn attack trail particles
+    if attackmanager.t >= attackmanager.trail_t then
+      particlemanager.new("attack", attack.x, attack.y)
+    end
+
     -- Check if attack reached it's destination
     if attack.x * attack.dir >= attack.goal_x * attack.dir then
       -- Remove health from target
@@ -34,6 +48,11 @@ attackmanager.update = function(dt)
       -- Remove attack
       table.remove(attackmanager.attacks, i)
     end
+  end
+
+  -- Reset timer
+  if attackmanager.t > attackmanager.trail_t then
+    attackmanager.t = attackmanager.t - attackmanager.trail_t
   end
 end
 

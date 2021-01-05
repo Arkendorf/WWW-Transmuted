@@ -39,4 +39,36 @@ particles.dust = {
   end,
 }
 
+-- Attack particles
+particles.attack = {
+  lifetime = .5,
+  frames = 16,
+  -- Called once when the particle is created
+  load = function(particle)
+    particle.t = particles.attack.lifetime
+    particle.yv = math.random(-100, 100) / 100
+  end,
+  -- Called every frame
+  update = function(particle, dt)
+    -- Manager particle lifetime
+    if particle.t > 0 then
+      particle.t = particle.t - dt
+    end
+    -- If particle has expired, return true (so it is deleted)
+    if particle.t <= 0 then
+      return true
+    end
+
+    -- Move the particle by the velocity
+    particle.y = particle.y + particle.yv * dt * 60 * 1
+    -- Reduce velocity
+    particle.yv = particle.yv * 1.05
+  end,
+  -- Called to render the particle to the screen
+  draw = function(particle)
+    local frame = particles.attack.frames - math.floor(particle.t / particles.attack.lifetime * particles.attack.frames)
+    love.graphics.draw(graphics.images.attack_trail, graphics.images.attack_trail_quads[frame], math.floor(particle.x), math.floor(particle.y), 0, 1, 1, 16, 16)
+  end,
+}
+
 return particles

@@ -1,5 +1,13 @@
 local graphics = {}
 
+graphics.generate_quads = function(image, frames, size)
+  local quads = {}
+  for i = 1, frames do
+    quads[i] = love.graphics.newQuad((i - 1) * size, 0, size, size, image:getDimensions())
+  end
+  return quads
+end
+
 graphics.images = {}
 -- Cards
 graphics.images.card_shield = love.graphics.newImage("images/card_shield.png")
@@ -24,10 +32,10 @@ graphics.images.logo = love.graphics.newImage("images/logo.png")
 -- particles
 -- Dust
 graphics.images.dust = love.graphics.newImage("images/dust.png")
-graphics.images.dust_quads = {}
-for i = 1, 14 do
-  graphics.images.dust_quads[i] = love.graphics.newQuad((i - 1) * 32, 0, 32, 32, graphics.images.dust:getDimensions())
-end
+graphics.images.dust_quads = graphics.generate_quads(graphics.images.dust, 14, 32)
+-- Attack trail
+graphics.images.attack_trail = love.graphics.newImage("images/attack_trail.png")
+graphics.images.attack_trail_quads = graphics.generate_quads(graphics.images.attack_trail, 16, 32)
 
 -- gui
 graphics.gui = {}
@@ -38,10 +46,8 @@ graphics.gui.button_highlight = love.graphics.newImage("images/button_highlight.
 graphics.gui.icon_button = love.graphics.newImage("images/icon_button.png")
 graphics.gui.icon_button_highlight = love.graphics.newImage("images/icon_button_highlight.png")
 graphics.gui.button_icons = love.graphics.newImage("images/button_icons.png")
-graphics.gui.button_icons_quads = {}
-for i = 1, 3 do
-  graphics.gui.button_icons_quads[i] = love.graphics.newQuad((i - 1) * 16, 0, 16, 16, graphics.gui.button_icons:getDimensions())
-end
+graphics.gui.button_icons_quads = graphics.generate_quads(graphics.gui.button_icons, 3, 16)
+
 -- textbox
 graphics.gui.textbox = love.graphics.newImage("images/textbox.png")
 graphics.gui.textbox_highlight = love.graphics.newImage("images/textbox_highlight.png")
