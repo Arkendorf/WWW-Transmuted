@@ -24,6 +24,8 @@ love.load = function()
   guimanager.load()
   mainmenu.load()
 
+  math.randomseed(os.time())
+
   -- Set the initial palette
   options.set_palette(8)
 end

@@ -5,6 +5,7 @@ local deckmanager = require "deckmanager"
 local boardmanager = require "boardmanager"
 local attackmanager = require "attackmanager"
 local charmanager = require "charmanager"
+local particlemanager = require "particlemanager"
 local graphics = require "graphics"
 local guimanager = require "guimanager"
 
@@ -34,6 +35,7 @@ game.load = function()
   handmanager.load()
   attackmanager.load()
   charmanager.load()
+  particlemanager.load()
 
   game.load_gui()
 
@@ -117,6 +119,7 @@ game.update = function(dt)
   handmanager.update(dt)
   attackmanager.update(dt)
   charmanager.update(dt)
+  particlemanager.update(dt)
 end
 
 game.draw = function()
@@ -125,6 +128,7 @@ game.draw = function()
   deckmanager.draw()
   attackmanager.draw()
   handmanager.draw()
+  particlemanager.draw()
 end
 
 game.mousepressed = function(x, y, button)

@@ -4,6 +4,7 @@ local attackmanager = require "attackmanager"
 local charmanager = require "charmanager"
 local cards = require "cards"
 local graphics = require "graphics"
+local particlemanager = require "particlemanager"
 
 boardmanager = {}
 
@@ -100,7 +101,7 @@ boardmanager.update = function(dt)
 
     if game.opponent_turn.card_num then
       -- Place the opponent's card visually on the board
-      boardmanager.place_card(boardmanager.opponent_board, cards[game.opponent_turn.card_num], game.opponent_turn.lane)
+      boardmanager.place_card(boardmanager.opponent_board, cards[game.opponent_turn.card_num], game.opponent_turn.lane, boardmanager.opponent_graphics)
       -- Reset opponent card after it has been added
       game.opponent_placed = false
       game.opponent_turn.card_num = false
@@ -213,7 +214,7 @@ boardmanager.place_player_card = function()
     -- Get the selected card
     local selected_card = handmanager.hand[handmanager.selected]
     -- Put the card into the place
-    boardmanager.place_card(boardmanager.player_board, selected_card, boardmanager.hover)
+    boardmanager.place_card(boardmanager.player_board, selected_card, boardmanager.hover, boardmanager.player_graphics)
     -- Tell the hand manager that the selected card was placed
     handmanager.card_placed()
     -- Let whoever's handling the network know that the player has placed their card
@@ -224,8 +225,13 @@ boardmanager.place_player_card = function()
 end
 
 -- Puts the given card on the given board on the given lane
-boardmanager.place_card = function(board, card, lane)
+boardmanager.place_card = function(board, card, lane, graphics)
   board[card.type][lane] = {value = card.value, type = card.type, card = card, y = 0, dip = boardmanager.place_dip}
+  -- Particles
+  local x, y = boardmanager.get_space_coords(lane, card.type, graphics)
+  for i = 1, 10 do
+    particlemanager.new("dust", x + boardmanager.token_w / 2, y + boardmanager.token_h / 2)
+  end
 end
 
 -- This function will be overridden by either the client or server
