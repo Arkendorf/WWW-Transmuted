@@ -36,6 +36,9 @@ graphics.images.dust_quads = graphics.generate_quads(graphics.images.dust, 14, 3
 -- Attack trail
 graphics.images.attack_trail = love.graphics.newImage("images/attack_trail.png")
 graphics.images.attack_trail_quads = graphics.generate_quads(graphics.images.attack_trail, 16, 32)
+-- Damage
+graphics.images.damage = love.graphics.newImage("images/damage.png")
+graphics.images.damage_quads = graphics.generate_quads(graphics.images.damage, 8, 32)
 
 -- gui
 graphics.gui = {}

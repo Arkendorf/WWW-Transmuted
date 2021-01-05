@@ -9,7 +9,7 @@ attackmanager.attacks = {}
 attackmanager.attack_speed = 500
 
 -- Shake magnitude
-attackmanager.shake_mag = 3
+attackmanager.shake_mag = 4
 
 -- How many seconds to wait between each trail particle spawn
 attackmanager.trail_t = .03
@@ -45,6 +45,12 @@ attackmanager.update = function(dt)
         attack.target.value = attack.target.value - attack.value
         attack.target.shake = .1 * attack.value
       end
+
+      -- Play damage particles
+      for i = 1, 8 do
+        particlemanager.new("damage", attack.goal_x, attack.y)
+      end
+
       -- Remove attack
       table.remove(attackmanager.attacks, i)
     end
