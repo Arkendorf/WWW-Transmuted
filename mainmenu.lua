@@ -46,7 +46,7 @@ mainmenu.load = function()
   -- Start background music
   if not audio.title:isPlaying() then
     audio.bgm:stop()
-    audiomanager.play(audio.title, .05)
+    audiomanager.play(audio.title)
   end
 end
 

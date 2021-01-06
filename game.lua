@@ -53,7 +53,7 @@ game.load = function()
 
   -- Start background music
   audio.title:stop()
-  audiomanager.play(audio.bgm, .02)
+  audiomanager.play(audio.bgm)
 
   -- Function that is called when a card is placed on the board
   boardmanager.network_card_placed = function(card, lane, type)

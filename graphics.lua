@@ -49,7 +49,7 @@ graphics.gui.button_highlight = love.graphics.newImage("images/button_highlight.
 graphics.gui.icon_button = love.graphics.newImage("images/icon_button.png")
 graphics.gui.icon_button_highlight = love.graphics.newImage("images/icon_button_highlight.png")
 graphics.gui.button_icons = love.graphics.newImage("images/button_icons.png")
-graphics.gui.button_icons_quads = graphics.generate_quads(graphics.gui.button_icons, 3, 16)
+graphics.gui.button_icons_quads = graphics.generate_quads(graphics.gui.button_icons, 5, 16)
 
 -- textbox
 graphics.gui.textbox = love.graphics.newImage("images/textbox.png")

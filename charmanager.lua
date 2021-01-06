@@ -20,7 +20,7 @@ charmanager.char_w = 162
 charmanager.char_h = 258
 
 -- Starting hp of characters
-charmanager.char_hp = 1
+charmanager.char_hp = 20
 
 charmanager.load = function()
   -- Set initial player pos and hp

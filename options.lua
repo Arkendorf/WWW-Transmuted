@@ -1,10 +1,13 @@
 local guimanager = require "guimanager"
 local palettes = require "palettes"
+local audio = require "audio"
 
 local options = {}
 
 options.active = false
+
 options.palette = 1
+options.music = true
 
 options.open = function(exit_func)
   -- Reset gui
@@ -12,6 +15,7 @@ options.open = function(exit_func)
   -- Set up gui
   guimanager.set_title("Options")
   guimanager.new_selector("palette", 1, "Palette", options.palette_change)
+  guimanager.new_checkbox("music", 2, "Music", options.music_toggle, options.music)
   guimanager.new_button("main", guimanager.bottom_slot - 1, "Main Menu", options.main)
   guimanager.new_button("back", guimanager.bottom_slot, "Back", options.exit)
 
@@ -45,6 +49,16 @@ options.main = function()
     game.leave()
   end
   mainmenu.load()
+end
+
+-- Toggles the music option
+options.music_toggle = function()
+  options.music = not options.music
+
+  audio.title:setVolume(options.music and audio.title_volume or 0)
+  audio.bgm:setVolume(options.music and audio.bgm_volume or 0)
+
+  return options.music
 end
 
 -- Called when a palette button is pressed

@@ -32,7 +32,9 @@ audiomanager.play = function(source, volume)
 end
 
 audiomanager.format = function(source, volume)
-  source:setVolume(volume or 1)
+  if volume then
+    source:setVolume(volume)
+  end
 end
 
 return audiomanager

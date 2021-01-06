@@ -108,12 +108,27 @@ guimanager.new_selector = function(id, slot, text, func)
 
   gui.new_icon_button(id .. "-", x, y, w, h, 2, function(args)
     func(-1)
-  end, {table, index})
+  end)
   gui.new_icon_button(id .. "+", x + guimanager.element_w - w, y, w, h, 3, function(args)
     func(1)
-  end, {table, index})
-  gui.new_text(id, x + w, y, guimanager.element_w - w * 2, "Palette", "center")
+  end)
+  gui.new_text(id, x + w, y, guimanager.element_w - w * 2, text, "center")
 end
+
+guimanager.new_checkbox = function(id, slot, text, func, default)
+  local w, h = guimanager.icon_element_w, guimanager.icon_element_h
+  local x, y = guimanager.pre_add(slot, "checkbox", id)
+
+  gui.new_icon_button(id .. "_button", x + guimanager.element_w - w, y, w, h, default and 4 or 5, function(args)
+    if func() then
+      gui.edit_button(id .. "_button", "icon", 4)
+    else
+      gui.edit_button(id .. "_button", "icon", 5)
+    end
+  end)
+  gui.new_text(id, x, y, guimanager.element_w - w, text, "left")
+end
+
 
 
 -- Returns the position for an element in the given slot
@@ -138,6 +153,9 @@ guimanager.delete_slot = function(slot)
     elseif old_element.type == "selector" then
       gui.remove_button(old_element.id .. "-")
       gui.remove_button(old_element.id .. "+")
+      gui.remove_text(old_element.id)
+    elseif old_element.type == "checkbox" then
+      gui.remove_button(old_element.id .. "_button")
       gui.remove_text(old_element.id)
     end
   end
