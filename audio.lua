@@ -8,14 +8,36 @@ audio.gandalf_death = false
 audio.crimson_hurt = false
 audio.crimson_death = false
 
-audio.card_hovered = love.audio.newSource("audio/card_hovered.wav", "static")
-audio.card_selected = love.audio.newSource("audio/card_selected.wav", "static")
-audio.token_hovered = love.audio.newSource("audio/token_hovered.mp3", "static")
+audio.card_hovered = love.audio.newSource("audio/button_hovered.wav", "static")
+audio.card_selected = love.audio.newSource("audio/button_clicked.wav", "static")
+audio.token_hovered = love.audio.newSource("audio/button_hovered.wav", "static")
 audio.card_placed = love.audio.newSource("audio/card_placed.wav", "static")
+
+audio.card_draw = love.audio.newSource("audio/card_draw.wav", "static")
 
 audio.button_hovered = love.audio.newSource("audio/button_hovered.wav", "static")
 audio.button_clicked = love.audio.newSource("audio/button_clicked.wav", "static")
 
 audio.attack_shot = love.audio.newSource("audio/attack_shot.wav", "static")
+
+audio.title = love.audio.newSource("audio/title.mp3", "stream")
+audio.title:isLooping(true)
+
+audio.bgm = love.audio.newSource("audio/bgm.mp3", "stream")
+audio.bgm:isLooping(true)
+
+audio.crimson_hurts = {
+  love.audio.newSource("audio/crimson_hurt1.mp3", "static"),
+  love.audio.newSource("audio/crimson_hurt2.mp3", "static"),
+  love.audio.newSource("audio/crimson_hurt3.mp3", "static"),
+}
+audio.crimson_death = love.audio.newSource("audio/crimson_death.mp3", "static")
+
+audio.gandalf_hurts = {
+  love.audio.newSource("audio/gandalf_hurt1.mp3", "static"),
+  love.audio.newSource("audio/gandalf_hurt2.mp3", "static"),
+  love.audio.newSource("audio/gandalf_hurt3.mp3", "static"),
+}
+audio.gandalf_death = love.audio.newSource("audio/gandalf_death.mp3", "static")
 
 return audio

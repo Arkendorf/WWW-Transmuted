@@ -2,6 +2,7 @@ local gui = require "gui"
 local guimanager = require "guimanager"
 local graphics = require "graphics"
 local charmanager = require "charmanager"
+local audio = require "audio"
 
 local mainmenu = {}
 
@@ -41,6 +42,12 @@ mainmenu.load = function()
   -- Get the logo position
   mainmenu.logo_x = (get_window_w() - graphics.images.logo:getWidth()) / 2
   mainmenu.logo_y = y - logo_h - mainmenu.logo_buffer
+
+  -- Start background music
+  if not audio.title:isPlaying() then
+    audio.bgm:stop()
+    audiomanager.play(audio.title, .05)
+  end
 end
 
 mainmenu.update = function(dt)

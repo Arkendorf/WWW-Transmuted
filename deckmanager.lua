@@ -14,7 +14,6 @@ deckmanager.load = function()
   deckmanager.x = 0
   deckmanager.y = get_window_h() - deckmanager.card_h
 
-  -- Replace deck generation later, perhaps allow customization
   deckmanager.deck = {}
   for i = 1, deckmanager.deck_size do
     deckmanager.deck[i] = cards[i % (#cards + 1)]

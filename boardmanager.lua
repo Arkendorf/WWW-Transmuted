@@ -49,6 +49,10 @@ boardmanager.dip_speed = 16
 
 boardmanager.hover = false
 
+-- Pause between placing cards and simulating attacks
+boardmanager.pause = 1
+boardmanager.t = 0
+
 boardmanager.load = function()
   -- Determine player board position
   boardmanager.player_graphics.x = (get_window_w() - boardmanager.board_spacing) / 2 - boardmanager.token_h * 2
@@ -57,6 +61,8 @@ boardmanager.load = function()
   -- Determine opponent board position
   boardmanager.opponent_graphics.x = (get_window_w() + boardmanager.board_spacing) / 2
   boardmanager.opponent_graphics.y = boardmanager.player_graphics.y
+
+  boardmanager.t = 0
 
   -- Reset boards to default state
   for _, board in ipairs({boardmanager.player_board, boardmanager.opponent_board}) do
@@ -115,13 +121,20 @@ boardmanager.update = function(dt)
       game.player_turn.card_num = false
     end
     -- Move on to the next game state
-    game.state = "simulate"
-    -- Generate attacks
-    boardmanager.generate_attacks(boardmanager.player_board, boardmanager.opponent_board, boardmanager.player_graphics, boardmanager.opponent_graphics, charmanager.opponent)
-    boardmanager.generate_attacks(boardmanager.opponent_board, boardmanager.player_board, boardmanager.opponent_graphics, boardmanager.player_graphics, charmanager.player)
+    game.state = "pause"
+    boardmanager.t = boardmanager.pause
   end
 
-  if game.state == "simulate" and attackmanager.attacks_over() then
+  if game.state == "pause" then
+    boardmanager.t = boardmanager.t - dt
+    if boardmanager.t <= 0 then
+      -- Move on to the next game state
+      game.state = "simulate"
+      -- Generate attacks
+      boardmanager.generate_attacks(boardmanager.player_board, boardmanager.opponent_board, boardmanager.player_graphics, boardmanager.opponent_graphics, charmanager.opponent)
+      boardmanager.generate_attacks(boardmanager.opponent_board, boardmanager.player_board, boardmanager.opponent_graphics, boardmanager.player_graphics, charmanager.player)
+    end
+  elseif game.state == "simulate" and attackmanager.attacks_over() then
     game.state = "place"
   end
 
@@ -243,7 +256,7 @@ boardmanager.place_card = function(board, card, lane, graphics)
     particlemanager.new("dust", x, y)
   end
   -- Play sound
-  audiomanager.new(audio.card_placed)
+  audiomanager.play(audio.card_placed, .4)
 end
 
 -- This function will be overridden by either the client or server

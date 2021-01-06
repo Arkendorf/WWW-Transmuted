@@ -35,7 +35,7 @@ gui.update = function(dt)
   end
   -- If a new element is highlighted, play a sound
   if old_highlight ~= highlight and highlight then
-    audiomanager.new(audio.button_hovered, .5)
+    audiomanager.new(audio.button_hovered, .6)
   end
 
   -- Textbox blink timer
@@ -124,7 +124,7 @@ gui.mousepressed = function(x, y, button)
   if not click_used then
     textbox = nil
   else
-    audiomanager.new(audio.button_clicked, .2)
+    audiomanager.new(audio.button_clicked, .3)
   end
 end
 

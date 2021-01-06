@@ -54,6 +54,13 @@ attackmanager.update = function(dt)
           else
             audiomanager.play(audio.shield_hurt)
           end
+        elseif attack.target.type == "char" then
+          if attack.target.value <= 0 then
+            audiomanager.play(audio[attack.target.char .. "_death"], .4)
+          else
+            local hurts = audio[attack.target.char .. "_hurts"]
+            audiomanager.play(hurts[math.random(1, #hurts)], .4)
+          end
         end
       end
 
@@ -85,8 +92,8 @@ attackmanager.add_attack = function(caster, target, start_x, goal_x, y)
     dir = -1
   end
   table.insert(attackmanager.attacks, {value = caster.value, target = target, x = start_x, goal_x = goal_x, y = y, dir = dir})
-  -- Play sound
-  audiomanager.play(audio.attack_shot)
+  -- Play attack sound
+  audiomanager.play(audio.attack_shot, .2)
 end
 
 attackmanager.attacks_over = function()

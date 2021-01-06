@@ -56,11 +56,6 @@ handmanager.update = function(dt)
         handmanager.hover = i
       end
     end
-    -- Play hover sound
-    if handmanager.hover ~= old_hover and handmanager.hover and not handmanager.grabbed then
-      audiomanager.new(audio.card_hovered, .1)
-    end
-
 
     -- Find the goal position for the current card graphic
     local goal_x
@@ -82,6 +77,10 @@ handmanager.update = function(dt)
     -- Move the card towards the goal position
     graphic.x = graphic.x + (goal_x - graphic.x) * 6 * dt
     graphic.y = graphic.y + (goal_y - graphic.y) * 6 * dt
+  end
+  -- Play hover sound
+  if handmanager.hover ~= old_hover and handmanager.hover and not handmanager.grabbed then
+    audiomanager.new(audio.card_hovered, .3)
   end
 end
 
@@ -127,7 +126,7 @@ handmanager.mousepressed = function(x, y, button)
         -- Reset hold time
         hold_time = 0
         -- Play sound
-        audiomanager.new(audio.card_selected)
+        audiomanager.new(audio.card_selected, .2)
         return true -- mark that the click has been used
       else -- Otherwise, mark no card as selected
         handmanager.selected = false
@@ -159,6 +158,9 @@ handmanager.fill_hand = function(deck)
       table.remove(deck, card)
 
       table.insert(handmanager.hand_graphics, {card = handmanager.hand[i], x = deckmanager.x, y = deckmanager.y})
+
+      -- Play sound
+      audiomanager.play(audio.card_draw, .5)
     end
   end
 end

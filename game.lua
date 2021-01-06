@@ -8,6 +8,7 @@ local charmanager = require "charmanager"
 local particlemanager = require "particlemanager"
 local graphics = require "graphics"
 local guimanager = require "guimanager"
+local audio = require "audio"
 
 local network = require "network"
 
@@ -49,6 +50,10 @@ game.load = function()
   -- Whether or not opponent is out of cards
   game.player_out = false
   game.opponent_out = false
+
+  -- Start background music
+  audio.title:stop()
+  audiomanager.play(audio.bgm, .02)
 
   -- Function that is called when a card is placed on the board
   boardmanager.network_card_placed = function(card, lane, type)
@@ -110,7 +115,14 @@ game.load_gui = function()
   local buffer = guimanager.buffer
   local w, h = guimanager.icon_element_w, guimanager.icon_element_h
   local x, y = get_window_w() - w - buffer, get_window_h() - h - buffer
-  gui.new_icon_button("menu", x, y, w, h, 1, options.toggle, game.load_gui)
+  gui.new_icon_button("menu", x, y, w, h, 1, game.toggle_options)
+end
+
+-- Toggles the options menu
+game.toggle_options = function()
+  if game.state ~= "over" then
+    options.toggle(game.load_gui)
+  end
 end
 
 game.update = function(dt)
@@ -139,7 +151,7 @@ end
 game.keypressed = function(key)
   handmanager.keypressed(key)
   if key == "escape" then
-    options.toggle(game.load_gui)
+    game.toggle_options()
   end
 end
 
