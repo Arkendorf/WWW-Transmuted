@@ -1,4 +1,5 @@
 local graphics = require "graphics"
+local audio = require "audio"
 
 local gui = {}
 
@@ -19,6 +20,7 @@ end
 
 gui.update = function(dt)
   -- Get highlight
+  local old_highlight = highlight
   highlight = nil
   local x, y = get_mouse_pos()
   for k, v in pairs(buttons) do
@@ -30,6 +32,10 @@ gui.update = function(dt)
     if x >= v.x and x <= v.x+v.w and y >= v.y and y <= v.y+v.h then
       highlight = k
     end
+  end
+  -- If a new element is highlighted, play a sound
+  if old_highlight ~= highlight and highlight then
+    audiomanager.new(audio.button_hovered, .5)
   end
 
   -- Textbox blink timer
@@ -117,6 +123,8 @@ gui.mousepressed = function(x, y, button)
   end
   if not click_used then
     textbox = nil
+  else
+    audiomanager.new(audio.button_clicked, .2)
   end
 end
 

@@ -1,0 +1,19 @@
+Spell death https://freesound.org/people/magnuswaker/sounds/540080/
+Shield hurt https://freesound.org/people/nekoninja/sounds/370203/
+Shield Death https://freesound.org/people/nekoninja/sounds/370203/
+Gandalf hurt
+Gandalf death
+Crimson hurt
+Crimson death
+
+Card hovered https://freesound.org/people/djlprojects/sounds/413145/
+Card selected https://freesound.org/people/EdgardEdition/sounds/113051/
+Token selected https://freesound.org/people/WhaTThes/sounds/387935/
+Card placed https://freesound.org/people/CosmicEmbers/sounds/387478/
+
+Attack shot https://freesound.org/people/Metzik/sounds/459782/
+
+button clicked https://freesound.org/people/Sergenious/sounds/55844/
+button hovered https://freesound.org/people/Joao_Janz/sounds/478283/
+
+bgm

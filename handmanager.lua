@@ -1,5 +1,6 @@
 local deckmanager = require "deckmanager"
 local graphics = require "graphics"
+local audio = require "audio"
 
 local handmanager = {}
 
@@ -42,6 +43,7 @@ handmanager.update = function(dt)
   end
 
   -- Reset card hover
+  local old_hover = handmanager.hover
   handmanager.hover = false
   -- Update hand graphics
   for i, graphic in ipairs(handmanager.hand_graphics) do
@@ -54,6 +56,11 @@ handmanager.update = function(dt)
         handmanager.hover = i
       end
     end
+    -- Play hover sound
+    if handmanager.hover ~= old_hover and handmanager.hover and not handmanager.grabbed then
+      audiomanager.new(audio.card_hovered, .1)
+    end
+
 
     -- Find the goal position for the current card graphic
     local goal_x
@@ -119,7 +126,9 @@ handmanager.mousepressed = function(x, y, button)
         handmanager.selected = handmanager.hover
         -- Reset hold time
         hold_time = 0
-        return true -- mar that the click has been used
+        -- Play sound
+        audiomanager.new(audio.card_selected)
+        return true -- mark that the click has been used
       else -- Otherwise, mark no card as selected
         handmanager.selected = false
       end

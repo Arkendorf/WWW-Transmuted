@@ -1,5 +1,6 @@
 local graphics = require "graphics"
 local particlemanager = require "particlemanager"
+local audio = require "audio"
 
 local attackmanager = {}
 
@@ -41,9 +42,19 @@ attackmanager.update = function(dt)
       if attack.target.type == "spells" then
         attack.target.value = 0
         attack.target.shake = .2
+        -- play spell death sound
+        audiomanager.play(audio.spell_death)
       else
         attack.target.value = attack.target.value - attack.value
         attack.target.shake = .1 * attack.value
+        -- Sound effects
+        if attack.target.type == "shields" then
+          if attack.target.value <= 0 then
+            audiomanager.play(audio.shield_death)
+          else
+            audiomanager.play(audio.shield_hurt)
+          end
+        end
       end
 
       -- Play damage particles
@@ -74,6 +85,8 @@ attackmanager.add_attack = function(caster, target, start_x, goal_x, y)
     dir = -1
   end
   table.insert(attackmanager.attacks, {value = caster.value, target = target, x = start_x, goal_x = goal_x, y = y, dir = dir})
+  -- Play sound
+  audiomanager.play(audio.attack_shot)
 end
 
 attackmanager.attacks_over = function()

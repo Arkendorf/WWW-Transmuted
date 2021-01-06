@@ -5,6 +5,7 @@ local charmanager = require "charmanager"
 local cards = require "cards"
 local graphics = require "graphics"
 local particlemanager = require "particlemanager"
+local audio = require "audio"
 
 boardmanager = {}
 
@@ -71,6 +72,7 @@ boardmanager.update = function(dt)
   boardmanager.update_board(boardmanager.opponent_board, dt)
 
   -- Reset the hover
+  local old_hover = boardmanager.hover
   boardmanager.hover = false
   -- Get the mouse position
   local mx, my = get_mouse_pos()
@@ -87,6 +89,9 @@ boardmanager.update = function(dt)
         end
       end
     end
+  end
+  if boardmanager.hover and boardmanager.hover ~= old_hover then
+    audiomanager.new(audio.token_hovered, .5)
   end
 
   -- If the player has grabbed a card, and dropped it, try to place it
@@ -237,6 +242,8 @@ boardmanager.place_card = function(board, card, lane, graphics)
   for i = 1, 8 do
     particlemanager.new("dust", x, y)
   end
+  -- Play sound
+  audiomanager.new(audio.card_placed)
 end
 
 -- This function will be overridden by either the client or server

@@ -41,7 +41,7 @@ particles.dust = {
 
 -- Attack particles
 particles.attack = {
-  lifetime = .5,
+  lifetime = .3,
   frames = 16,
   -- Called once when the particle is created
   load = function(particle)

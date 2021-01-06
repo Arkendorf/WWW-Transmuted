@@ -6,6 +6,7 @@ server = require "server"
 client = require "client"
 game = require "game"
 shaders = require "shaders"
+audiomanager = require "audiomanager"
 
 local gui = require "gui"
 local guimanager = require "guimanager"
@@ -22,6 +23,7 @@ love.load = function()
   canvas = love.graphics.newCanvas(love.graphics.getWidth() / scale, love.graphics.getHeight() / scale)
 
   guimanager.load()
+  audiomanager.load()
   mainmenu.load()
 
   math.randomseed(os.time())
@@ -32,6 +34,7 @@ end
 
 love.update = function(dt)
   guimanager.update(dt)
+  audiomanager.update(dt)
 
   if mode == "mainmenu" then
     mainmenu.update(dt)
